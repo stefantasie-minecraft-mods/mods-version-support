@@ -99,10 +99,12 @@ public final class ProfileRow extends ContainerObjectSelectionList.Entry<Profile
 
 	private void drawBar(GuiGraphicsExtractor extractor, CheckStatus current, int right, int top, float alpha) {
 		int barLeft = right - buttonBlockWidth() - BAR_WIDTH - 6;
-		double filled = current.running()
-				? current.progress().fraction()
-				: current.report().map(report -> report.supportedRatio()).orElse(0d);
-		SupportBar.draw(extractor, barLeft, top + 10, BAR_WIDTH, BAR_HEIGHT, filled, alpha);
+		if (current.running()) {
+			SupportBar.drawProgress(extractor, barLeft, top + 10, BAR_WIDTH, BAR_HEIGHT, current.progress().fraction(), alpha);
+			return;
+		}
+		double supported = current.report().map(report -> report.supportedRatio()).orElse(0d);
+		SupportBar.drawResult(extractor, barLeft, top + 10, BAR_WIDTH, BAR_HEIGHT, supported, alpha);
 	}
 
 	private void layoutButtons(GuiGraphicsExtractor extractor, int right, int top, int mouseX, int mouseY, float partialTick) {

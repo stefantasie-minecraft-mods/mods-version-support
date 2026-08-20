@@ -3,7 +3,9 @@ package de.stefantasie.modsversionsupport.ui.screen.editor;
 import de.stefantasie.modsversionsupport.domain.mod.TrackedMod;
 import de.stefantasie.modsversionsupport.domain.report.ModSupportView;
 import de.stefantasie.modsversionsupport.domain.report.SupportState;
+import de.stefantasie.modsversionsupport.ui.icon.ModIconTextures;
 import de.stefantasie.modsversionsupport.ui.theme.Palette;
+import de.stefantasie.modsversionsupport.ui.widget.icon.ModIcon;
 import de.stefantasie.modsversionsupport.ui.widget.list.SupportBadge;
 import java.util.List;
 import java.util.function.Consumer;
@@ -18,15 +20,18 @@ import net.minecraft.network.chat.Component;
 /** One mod in the editor: checkbox, name, source file and, once checked, its state. */
 public final class ModRow extends ContainerObjectSelectionList.Entry<ModRow> {
 
-	private static final int TEXT_LEFT = 26;
+	private static final int ICON_LEFT = 24;
+	private static final int TEXT_LEFT = 46;
 
 	private final ModSupportView view;
 	private final Font font;
+	private final ModIconTextures icons;
 	private final Checkbox checkbox;
 
-	public ModRow(ModSupportView view, boolean selected, Font font, Consumer<TrackedMod> onToggle) {
+	public ModRow(ModSupportView view, boolean selected, Font font, ModIconTextures icons, Consumer<TrackedMod> onToggle) {
 		this.view = view;
 		this.font = font;
+		this.icons = icons;
 		this.checkbox = Checkbox.builder(Component.empty(), font)
 				.selected(selected)
 				.onValueChange((box, value) -> onToggle.accept(view.mod()))
@@ -56,6 +61,7 @@ public final class ModRow extends ContainerObjectSelectionList.Entry<ModRow> {
 		checkbox.setY(top + 2);
 		checkbox.extractRenderState(extractor, mouseX, mouseY, partialTick);
 
+		ModIcon.draw(extractor, font, icons.iconFor(view.mod()), view.mod().displayName(), left + ICON_LEFT, top + 3);
 		extractor.text(font, Component.literal(view.mod().displayName()), left + TEXT_LEFT, top + 1, Palette.TEXT);
 		extractor.text(font, Component.literal(view.mod().fileName().orElse("Modrinth")),
 				left + TEXT_LEFT, top + 12, Palette.TEXT_MUTED);

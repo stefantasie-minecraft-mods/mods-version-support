@@ -60,12 +60,15 @@ public final class ProfileDetailScreen extends Screen {
 		extractor.centeredText(font, Component.translatable(
 				ModsVersionSupport.translationKey("overview.target"), profile.targetVersion()), width / 2, 26, Palette.TEXT_MUTED);
 
-		double filled = status.running()
-				? status.progress().fraction()
-				: status.report().map(report -> report.supportedRatio()).orElse(0d);
-		SupportBar.draw(extractor, (width - BAR_WIDTH) / 2, 40, BAR_WIDTH, 10, filled, 1f);
-		status.report().ifPresent(report -> extractor.centeredText(
-				font, Component.literal(report.percent() + "%"), width / 2, 52, Palette.TEXT));
+		int barLeft = (width - BAR_WIDTH) / 2;
+		if (status.running()) {
+			SupportBar.drawProgress(extractor, barLeft, 40, BAR_WIDTH, 10, status.progress().fraction(), 1f);
+		} else {
+			double supported = status.report().map(report -> report.supportedRatio()).orElse(0d);
+			SupportBar.drawResult(extractor, barLeft, 40, BAR_WIDTH, 10, supported, 1f);
+			status.report().ifPresent(report -> extractor.centeredText(
+					font, Component.literal(report.percent() + "%"), width / 2, 52, Palette.TEXT));
+		}
 	}
 
 	@Override
@@ -96,7 +99,7 @@ public final class ProfileDetailScreen extends Screen {
 		VersionProfile current = currentProfile();
 		shownReport = current.lastReport().map(SupportReport::finishedAt);
 		List<ModSupportView> views = ModSupportView.of(current.selection().selectedMods(), current.lastReport());
-		list.show(order.sort(views).stream().map(view -> new ModSupportRow(view, font)).toList());
+		list.show(order.sort(views).stream().map(view -> new ModSupportRow(view, font, runtime.icons())).toList());
 	}
 
 	private VersionProfile currentProfile() {

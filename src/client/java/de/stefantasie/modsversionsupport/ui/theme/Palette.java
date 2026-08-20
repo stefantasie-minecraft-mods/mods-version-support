@@ -8,6 +8,7 @@ public final class Palette {
 	public static final int ROW_BACKGROUND = 0x50000000;
 	public static final int ROW_BORDER = 0x40FFFFFF;
 	public static final int BAR_TRACK = 0xFF2B2B2B;
+	public static final int PROGRESS = 0xFF7C7C7C;
 	public static final int SUPPORTED = 0xFF3FA34D;
 	public static final int PRERELEASE = 0xFFE8B03A;
 	public static final int MISSING = 0xFFC63A2E;

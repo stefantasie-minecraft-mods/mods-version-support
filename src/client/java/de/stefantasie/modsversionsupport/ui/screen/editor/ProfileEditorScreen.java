@@ -10,14 +10,18 @@ import de.stefantasie.modsversionsupport.domain.selection.ModSelection;
 import de.stefantasie.modsversionsupport.runtime.ClientRuntime;
 import de.stefantasie.modsversionsupport.ui.theme.Palette;
 import de.stefantasie.modsversionsupport.ui.widget.autocomplete.AutocompleteBinding;
+import de.stefantasie.modsversionsupport.ui.widget.autocomplete.Suggestion;
+import de.stefantasie.modsversionsupport.ui.widget.autocomplete.SuggestionIcons;
 import de.stefantasie.modsversionsupport.ui.widget.autocomplete.SuggestionOverlay;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 
 /** Creates and edits one version profile. */
 public final class ProfileEditorScreen extends Screen {
@@ -83,7 +87,7 @@ public final class ProfileEditorScreen extends Screen {
 				Component.translatable(ModsVersionSupport.translationKey("editor.version"))));
 		versionField.setValue(state.targetVersion());
 
-		versionAutocomplete = new AutocompleteBinding(versionField, versionSuggestions, new SuggestionOverlay(font), suggestion -> {
+		versionAutocomplete = new AutocompleteBinding(versionField, versionSuggestions, new SuggestionOverlay(font, SuggestionIcons.NONE), suggestion -> {
 			versionField.setValue(suggestion.value());
 			state.retargetTo(suggestion.value());
 		});
@@ -98,7 +102,7 @@ public final class ProfileEditorScreen extends Screen {
 		searchField = addRenderableWidget(new EditBox(font, left, SEARCH_TOP, CONTENT_WIDTH, FIELD_HEIGHT,
 				Component.translatable(ModsVersionSupport.translationKey("editor.search"))));
 		searchField.setHint(Component.translatable(ModsVersionSupport.translationKey("editor.search")));
-		searchAutocomplete = new AutocompleteBinding(searchField, modSuggestions, new SuggestionOverlay(font), suggestion ->
+		searchAutocomplete = new AutocompleteBinding(searchField, modSuggestions, new SuggestionOverlay(font, this::iconForSuggestion), suggestion ->
 				modSuggestions.modFor(suggestion).ifPresent(mod -> {
 					state.add(mod);
 					searchField.setValue("");
@@ -186,6 +190,10 @@ public final class ProfileEditorScreen extends Screen {
 		versionAutocomplete.openWith(versionSuggestions.all());
 	}
 
+	private Optional<Identifier> iconForSuggestion(Suggestion suggestion) {
+		return modSuggestions.modFor(suggestion).flatMap(runtime.icons()::iconFor);
+	}
+
 	private void cycleOrder() {
 		order = order.next();
 		orderButton.setMessage(orderLabel());
@@ -200,7 +208,7 @@ public final class ProfileEditorScreen extends Screen {
 	private void showMods() {
 		List<ModSupportView> views = ModSupportView.of(state.selection().mods(), state.lastReport());
 		List<ModRow> rows = order.sort(views).stream()
-				.map(view -> new ModRow(view, state.selection().isSelected(view.mod().key()), font, this::toggle))
+				.map(view -> new ModRow(view, state.selection().isSelected(view.mod().key()), font, runtime.icons(), this::toggle))
 				.toList();
 		modList.show(rows);
 	}

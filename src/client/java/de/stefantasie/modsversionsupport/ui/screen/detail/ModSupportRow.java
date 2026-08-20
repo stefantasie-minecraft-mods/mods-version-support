@@ -1,7 +1,9 @@
 package de.stefantasie.modsversionsupport.ui.screen.detail;
 
 import de.stefantasie.modsversionsupport.domain.report.ModSupportView;
+import de.stefantasie.modsversionsupport.ui.icon.ModIconTextures;
 import de.stefantasie.modsversionsupport.ui.theme.Palette;
+import de.stefantasie.modsversionsupport.ui.widget.icon.ModIcon;
 import de.stefantasie.modsversionsupport.ui.widget.list.SupportBadge;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -11,12 +13,17 @@ import net.minecraft.network.chat.Component;
 /** One mod with its verdict for the target version. */
 public final class ModSupportRow extends ObjectSelectionList.Entry<ModSupportRow> {
 
+	private static final int ICON_LEFT = 4;
+	private static final int TEXT_LEFT = 26;
+
 	private final ModSupportView view;
 	private final Font font;
+	private final ModIconTextures icons;
 
-	public ModSupportRow(ModSupportView view, Font font) {
+	public ModSupportRow(ModSupportView view, Font font, ModIconTextures icons) {
 		this.view = view;
 		this.font = font;
+		this.icons = icons;
 	}
 
 	@Override
@@ -29,8 +36,9 @@ public final class ModSupportRow extends ObjectSelectionList.Entry<ModSupportRow
 		int left = getContentX();
 		int top = getContentY();
 
-		extractor.text(font, Component.literal(view.mod().displayName()), left + 4, top + 1, Palette.TEXT);
-		extractor.text(font, Component.literal(secondLine()), left + 4, top + 12, Palette.TEXT_MUTED);
+		ModIcon.draw(extractor, font, icons.iconFor(view.mod()), view.mod().displayName(), left + ICON_LEFT, top + 3);
+		extractor.text(font, Component.literal(view.mod().displayName()), left + TEXT_LEFT, top + 1, Palette.TEXT);
+		extractor.text(font, Component.literal(secondLine()), left + TEXT_LEFT, top + 12, Palette.TEXT_MUTED);
 
 		int badgeWidth = SupportBadge.widthOf(font, view.state());
 		SupportBadge.draw(extractor, font, view.state(), getContentRight() - badgeWidth - 4, top + 6);

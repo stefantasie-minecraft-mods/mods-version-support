@@ -1,27 +1,31 @@
 package de.stefantasie.modsversionsupport.ui.widget.autocomplete;
 
 import de.stefantasie.modsversionsupport.ui.theme.Palette;
+import de.stefantasie.modsversionsupport.ui.widget.icon.ModIcon;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.resources.Identifier;
 
 /** The popup under a text field. The screen draws it last so it covers the widgets below. */
 public final class SuggestionOverlay {
 
-	private static final int ENTRY_HEIGHT = 14;
+	private static final int ENTRY_HEIGHT = 18;
 	private static final int MAX_ENTRIES = 7;
 	private static final int BACKGROUND = 0xFF16121A;
 
 	private final Font font;
+	private final SuggestionIcons icons;
 	private List<Suggestion> suggestions = List.of();
 	private int x;
 	private int y;
 	private int width;
 	private boolean visible;
 
-	public SuggestionOverlay(Font font) {
+	public SuggestionOverlay(Font font, SuggestionIcons icons) {
 		this.font = font;
+		this.icons = icons;
 	}
 
 	public void showBelow(int fieldX, int fieldY, int fieldWidth, int fieldHeight, List<Suggestion> found) {
@@ -55,7 +59,13 @@ public final class SuggestionOverlay {
 				extractor.fill(x + 1, entryTop, x + width - 1, entryTop + ENTRY_HEIGHT, Palette.ROW_BACKGROUND);
 			}
 			Suggestion suggestion = suggestions.get(index);
-			extractor.text(font, suggestion.label(), x + 4, entryTop + 3, Palette.TEXT);
+			Optional<Identifier> icon = icons.iconFor(suggestion);
+			int labelLeft = x + 4;
+			if (icon.isPresent()) {
+				ModIcon.draw(extractor, font, icon, suggestion.label().getString(), labelLeft, entryTop - 1);
+				labelLeft += ModIcon.SIZE + 4;
+			}
+			extractor.text(font, suggestion.label(), labelLeft, entryTop + 3, Palette.TEXT);
 			suggestion.detail().ifPresent(detail -> extractor.text(
 					font, detail, x + width - 4 - font.width(detail), entryTop + 3, Palette.TEXT_MUTED));
 		}

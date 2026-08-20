@@ -21,6 +21,9 @@ import de.stefantasie.modsversionsupport.mojang.versions.VersionManifestGateway;
 import de.stefantasie.modsversionsupport.platform.installed.InstalledModScanner;
 import de.stefantasie.modsversionsupport.storage.ProfileStore;
 import de.stefantasie.modsversionsupport.storage.StorageLayout;
+import de.stefantasie.modsversionsupport.ui.icon.IconCache;
+import de.stefantasie.modsversionsupport.ui.icon.IconDownloader;
+import de.stefantasie.modsversionsupport.ui.icon.ModIconTextures;
 import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -39,6 +42,7 @@ public final class ClientRuntime implements AutoCloseable {
 	private final ModSearchGateway search;
 	private final AtomicReference<RuntimeSettings> settings;
 	private final List<InstalledMod> installedMods;
+	private final ModIconTextures icons;
 
 	private ClientRuntime(RuntimeSettings initialSettings) {
 		this.settings = new AtomicReference<>(initialSettings);
@@ -57,6 +61,7 @@ public final class ClientRuntime implements AutoCloseable {
 				new ProjectVersionGateway(modrinthHttp, LOADERS),
 				VersionSupportCache.lasting(initialSettings.cacheLifetime()),
 				Instant::now);
+		this.icons = new ModIconTextures(new IconDownloader(new IconCache(StorageLayout.iconCache()), userAgent(initialSettings.contact())));
 		this.checks = new CheckService(checker, initialSettings.parallelProfiles());
 		this.coordinator = new CheckCoordinator(checks, profiles);
 	}
@@ -85,6 +90,10 @@ public final class ClientRuntime implements AutoCloseable {
 		return installedMods;
 	}
 
+	public ModIconTextures icons() {
+		return icons;
+	}
+
 	public RuntimeSettings settings() {
 		return settings.get();
 	}
@@ -96,6 +105,7 @@ public final class ClientRuntime implements AutoCloseable {
 	@Override
 	public void close() {
 		checks.close();
+		icons.close();
 	}
 
 	private static String userAgent(String contact) {
