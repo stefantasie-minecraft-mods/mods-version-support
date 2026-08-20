@@ -15,11 +15,15 @@ to a newer Minecraft version, which of the installed mods would come along?
 - Shows per mod whether it is ready, only has a prerelease, has nothing for that version, or is
   unknown to Modrinth. The list sorts by availability, name or source.
 - Adds mods that are not installed through a Modrinth search with autocomplete and icons.
+- Reports for a mod without a build for the target version which Minecraft version it still sits on.
+- Takes the icon of an installed mod out of its own jar; search results show Modrinth's project
+  icon, downloaded once and cached on disk under `config/mods-version-support/icons`.
 
 ## Using it
 
 Open the overview through Mod Menu, the client command `/modsversionsupport`, or a key you bind
-yourself under Controls. Add an entry with the plus button, pick a Minecraft version from the
+yourself under Controls. Arrow keys move through the entries, enter opens the mods of one entry,
+escape goes back; the same keys drive the version and search suggestions. Add an entry with the plus button, pick a Minecraft version from the
 dropdown or by typing, and choose which mods take part.
 
 Minecraft versions come from Mojang's `version_manifest_v2.json`, the same list a launcher shows.
@@ -50,5 +54,5 @@ game draws.
 ## Dependencies
 
 Fabric API is required. Mod Menu and Cloth Config are optional: without them the entry in the
-mod list and the settings screen are missing, everything else works. The webp decoder for
-Modrinth icons ships inside the jar.
+mod list and the settings screen are missing, everything else works. Modrinth serves its project
+icons as webp, so a decoder for that format ships inside the jar.
