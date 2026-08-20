@@ -6,11 +6,11 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 /** Dots circling while a check runs, the leading one brightest. */
 public final class Spinner {
 
-	public static final int SIZE = 14;
+	public static final int SIZE = 12;
 
 	private static final int DOTS = 8;
-	private static final int DOT_SIZE = 3;
-	private static final int RADIUS = 5;
+	private static final int DOT_SIZE = 2;
+	private static final int RADIUS = 4;
 	private static final long STEP_MILLIS = 110;
 	private static final float DIMMEST = 0.15f;
 

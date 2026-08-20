@@ -23,7 +23,7 @@ public final class ProfileRow extends ContainerObjectSelectionList.Entry<Profile
 	private static final int BUTTON_SIZE = 18;
 	private static final int BAR_WIDTH = 110;
 	private static final int BAR_HEIGHT = 12;
-	private static final int SPINNER_WIDTH = 22;
+	private static final int LABEL_LEFT = 6;
 	private static final float DIMMED = 0.45f;
 
 	private final VersionProfile profile;
@@ -76,10 +76,7 @@ public final class ProfileRow extends ContainerObjectSelectionList.Entry<Profile
 		int right = getContentRight();
 
 		extractor.fill(left, top, right, getContentBottom(), Palette.withAlpha(Palette.ROW_BACKGROUND, alpha));
-		if (current.running()) {
-			Spinner.draw(extractor, left + 4, top + (getContentHeight() - Spinner.SIZE) / 2);
-		}
-		drawLabels(extractor, left + SPINNER_WIDTH, top, alpha);
+		drawLabels(extractor, left + LABEL_LEFT, top, alpha);
 		drawBar(extractor, current, right, top, alpha);
 		layoutButtons(extractor, right, top, mouseX, mouseY, partialTick);
 	}
@@ -95,10 +92,11 @@ public final class ProfileRow extends ContainerObjectSelectionList.Entry<Profile
 		int barTop = top + (getContentHeight() - BAR_HEIGHT) / 2;
 		if (current.running()) {
 			SupportBar.drawProgress(extractor, barLeft, barTop, BAR_WIDTH, BAR_HEIGHT, current.progress().fraction(), alpha);
-		} else {
-			double supported = current.report().map(report -> report.supportedRatio()).orElse(0d);
-			SupportBar.drawResult(extractor, barLeft, barTop, BAR_WIDTH, BAR_HEIGHT, supported, alpha);
+			Spinner.draw(extractor, barLeft + (BAR_WIDTH - Spinner.SIZE) / 2, barTop + (BAR_HEIGHT - Spinner.SIZE) / 2);
+			return;
 		}
+		double supported = current.report().map(report -> report.supportedRatio()).orElse(0d);
+		SupportBar.drawResult(extractor, barLeft, barTop, BAR_WIDTH, BAR_HEIGHT, supported, alpha);
 		drawPercentOnBar(extractor, current, barLeft, barTop, alpha);
 	}
 
