@@ -39,5 +39,6 @@
 	"mods-version-support.settings.cache": "Cache lifetime in minutes",
 	"mods-version-support.settings.restart_needed": "Takes effect after restarting the game.",
 	"mods-version-support.settings.contact": "Contact for the User-Agent",
-	"mods-version-support.settings.contact.tooltip": "Modrinth asks callers to identify themselves. An email address or username is enough."
+	"mods-version-support.settings.contact.tooltip": "Modrinth asks callers to identify themselves. An email address or username is enough.",
+	"mods-version-support.detail.up_to": "still at %s"
 }

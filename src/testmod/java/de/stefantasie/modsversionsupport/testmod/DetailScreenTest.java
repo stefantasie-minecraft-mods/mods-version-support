@@ -15,6 +15,8 @@ import net.minecraft.client.gui.screens.TitleScreen;
 public final class DetailScreenTest implements FabricClientGameTest {
 
 	private static final int SORT_BUTTON_OFFSET_FROM_BOTTOM = 18;
+	private static final String AHEAD_OF_EVERYTHING = "26.3-snapshot-9";
+	private static final List<String> PUBLISHED_MODS = List.of("cloth-config", "fabric-api", "modmenu");
 
 	@Override
 	public void runTest(ClientGameTestContext context) {
@@ -35,8 +37,27 @@ public final class DetailScreenTest implements FabricClientGameTest {
 		context.waitTicks(5);
 		context.takeScreenshot("detail-sorted-by-name");
 
+		showNewestSupportedVersions(context, runtime);
+
 		context.setScreen(TitleScreen::new);
 		context.waitTicks(5);
+	}
+
+	private void showNewestSupportedVersions(ClientGameTestContext context, ClientRuntime runtime) {
+		List<TrackedMod> published = runtime.installedMods().stream()
+				.filter(mod -> PUBLISHED_MODS.contains(mod.modId()))
+				.map(TrackedMod.class::cast)
+				.toList();
+		VersionProfile ahead = VersionProfile.create("Ahead", AHEAD_OF_EVERYTHING, ModSelection.allOf(published));
+		runtime.profiles().add(ahead);
+		runtime.checks().check(ahead);
+
+		context.setScreen(() -> new ProfileDetailScreen(runtime, null, ahead));
+		context.waitFor(client -> runtime.profiles().find(ahead.id())
+				.filter(stored -> stored.lastReport().isPresent())
+				.isPresent(), 1200);
+		context.waitTicks(5);
+		context.takeScreenshot("detail-newest-supported");
 	}
 
 	private void clickSortButton(ClientGameTestContext context) {

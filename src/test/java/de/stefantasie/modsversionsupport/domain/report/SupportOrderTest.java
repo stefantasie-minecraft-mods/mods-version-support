@@ -17,10 +17,10 @@ class SupportOrderTest {
 	private final TrackedMod added = new ModrinthMod("AANobbMI", "Appleskin", Optional.empty());
 
 	private final List<ModSupportView> views = List.of(
-			new ModSupportView(missing, ModSupport.unsupported(missing.key())),
+			new ModSupportView(missing, ModSupport.unsupported(missing.key(), Optional.of("26.1.2"))),
 			new ModSupportView(added, ModSupport.unknownProject(added.key())),
-			new ModSupportView(alpha, ModSupport.supported(alpha.key(), "1.0", ReleaseChannel.ALPHA, false)),
-			new ModSupportView(ready, ModSupport.supported(ready.key(), "1.0", ReleaseChannel.RELEASE, false)));
+			new ModSupportView(alpha, ModSupport.supported(alpha.key(), "1.0", ReleaseChannel.ALPHA, "26.2", false)),
+			new ModSupportView(ready, ModSupport.supported(ready.key(), "1.0", ReleaseChannel.RELEASE, "26.2", false)));
 
 	@Test
 	void availabilityPutsReadyModsFirst() {

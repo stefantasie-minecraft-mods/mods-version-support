@@ -17,6 +17,10 @@ public final class ModrinthEndpoints {
 		return URI.create(BASE + "/version_files");
 	}
 
+	public static URI project(String projectId) {
+		return URI.create(BASE + "/project/" + encode(projectId));
+	}
+
 	public static URI projectVersions(String projectId, List<String> loaders, String gameVersion) {
 		return URI.create(BASE + "/project/" + encode(projectId) + "/version"
 				+ "?loaders=" + encode(jsonArray(loaders))

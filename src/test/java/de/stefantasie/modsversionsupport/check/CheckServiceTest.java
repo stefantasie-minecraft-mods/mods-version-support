@@ -9,9 +9,12 @@ import de.stefantasie.modsversionsupport.domain.profile.VersionProfile;
 import de.stefantasie.modsversionsupport.domain.report.SupportReport;
 import de.stefantasie.modsversionsupport.domain.selection.ModSelection;
 import de.stefantasie.modsversionsupport.http.RecordingJsonHttpClient;
-import de.stefantasie.modsversionsupport.modrinth.cache.VersionSupportCache;
+import de.stefantasie.modsversionsupport.modrinth.cache.TimedCache;
 import de.stefantasie.modsversionsupport.modrinth.hash.HashLookupGateway;
+import de.stefantasie.modsversionsupport.modrinth.project.ProjectGateway;
 import de.stefantasie.modsversionsupport.modrinth.project.ProjectVersionGateway;
+import de.stefantasie.modsversionsupport.mojang.versions.VersionCatalog;
+import de.stefantasie.modsversionsupport.mojang.versions.VersionRanking;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -26,7 +29,10 @@ class CheckServiceTest {
 	private final ProfileChecker checker = new ProfileChecker(
 			new ModProjectResolver(new HashLookupGateway(RecordingJsonHttpClient.answering("no-matches.json"))),
 			new ProjectVersionGateway(RecordingJsonHttpClient.answering("sodium-versions.json"), List.of("fabric")),
-			VersionSupportCache.lasting(Duration.ofMinutes(5)),
+			new ProjectGateway(RecordingJsonHttpClient.answering("project-sodium.json")),
+			TimedCache.lasting(Duration.ofMinutes(5)),
+			TimedCache.lasting(Duration.ofMinutes(5)),
+			() -> VersionRanking.of(VersionCatalog.empty()),
 			Instant::now);
 
 	@Test

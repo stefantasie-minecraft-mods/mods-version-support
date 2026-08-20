@@ -5,9 +5,11 @@ import de.stefantasie.modsversionsupport.domain.profile.VersionProfile;
 import de.stefantasie.modsversionsupport.domain.report.CheckProgress;
 import de.stefantasie.modsversionsupport.domain.report.ModSupport;
 import de.stefantasie.modsversionsupport.domain.report.SupportReport;
-import de.stefantasie.modsversionsupport.modrinth.cache.VersionSupportCache;
+import de.stefantasie.modsversionsupport.modrinth.cache.TimedCache;
 import de.stefantasie.modsversionsupport.modrinth.project.ModrinthVersion;
+import de.stefantasie.modsversionsupport.modrinth.project.ProjectGateway;
 import de.stefantasie.modsversionsupport.modrinth.project.ProjectVersionGateway;
+import de.stefantasie.modsversionsupport.mojang.versions.VersionRanking;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,17 +23,26 @@ public final class ProfileChecker {
 
 	private final ModProjectResolver resolver;
 	private final ProjectVersionGateway versions;
-	private final VersionSupportCache cache;
+	private final ProjectGateway projects;
+	private final TimedCache<List<ModrinthVersion>> versionCache;
+	private final TimedCache<List<String>> gameVersionCache;
+	private final Supplier<VersionRanking> ranking;
 	private final Supplier<Instant> clock;
 
 	public ProfileChecker(
 			ModProjectResolver resolver,
 			ProjectVersionGateway versions,
-			VersionSupportCache cache,
+			ProjectGateway projects,
+			TimedCache<List<ModrinthVersion>> versionCache,
+			TimedCache<List<String>> gameVersionCache,
+			Supplier<VersionRanking> ranking,
 			Supplier<Instant> clock) {
 		this.resolver = resolver;
 		this.versions = versions;
-		this.cache = cache;
+		this.projects = projects;
+		this.versionCache = versionCache;
+		this.gameVersionCache = gameVersionCache;
+		this.ranking = ranking;
 		this.clock = clock;
 	}
 
@@ -64,20 +75,31 @@ public final class ProfileChecker {
 			return ModSupport.unknownProject(mod.key());
 		}
 		try {
-			return SupportEvaluator.evaluate(mod.key(), versionsFor(projectId.get(), targetVersion));
+			ModSupport verdict = SupportEvaluator.evaluate(mod.key(), versionsFor(projectId.get(), targetVersion), targetVersion);
+			return verdict.state().countsAsSupported()
+					? verdict
+					: ModSupport.unsupported(mod.key(), newestSupported(projectId.get(), targetVersion));
 		} catch (RuntimeException failure) {
 			return ModSupport.failed(mod.key());
 		}
 	}
 
 	private List<ModrinthVersion> versionsFor(String projectId, String targetVersion) {
-		Optional<List<ModrinthVersion>> cached = cache.get(projectId, targetVersion);
-		if (cached.isPresent()) {
-			return cached.get();
-		}
-		List<ModrinthVersion> fetched = versions.versionsFor(projectId, targetVersion);
-		cache.put(projectId, targetVersion, fetched);
-		return fetched;
+		String key = projectId + "@" + targetVersion;
+		return versionCache.get(key).orElseGet(() -> {
+			List<ModrinthVersion> fetched = versions.versionsFor(projectId, targetVersion);
+			versionCache.put(key, fetched);
+			return fetched;
+		});
+	}
+
+	private Optional<String> newestSupported(String projectId, String targetVersion) {
+		List<String> supported = gameVersionCache.get(projectId).orElseGet(() -> {
+			List<String> fetched = projects.supportedGameVersions(projectId);
+			gameVersionCache.put(projectId, fetched);
+			return fetched;
+		});
+		return ranking.get().newestAtMost(targetVersion, supported);
 	}
 
 	private void stopWhenCancelled(BooleanSupplier cancelled) {

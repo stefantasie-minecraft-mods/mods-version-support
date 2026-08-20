@@ -39,5 +39,6 @@
 	"mods-version-support.settings.cache": "Zwischenspeicher in Minuten",
 	"mods-version-support.settings.restart_needed": "Wirkt nach einem Neustart des Spiels.",
 	"mods-version-support.settings.contact": "Kontakt für den User-Agent",
-	"mods-version-support.settings.contact.tooltip": "Modrinth bittet Aufrufer, sich erkennbar zu machen. Eine E-Mail-Adresse oder ein Benutzername genügt."
+	"mods-version-support.settings.contact.tooltip": "Modrinth bittet Aufrufer, sich erkennbar zu machen. Eine E-Mail-Adresse oder ein Benutzername genügt.",
+	"mods-version-support.detail.up_to": "noch bei %s"
 }

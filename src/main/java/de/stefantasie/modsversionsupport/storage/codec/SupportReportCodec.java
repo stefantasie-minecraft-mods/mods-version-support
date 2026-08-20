@@ -24,6 +24,7 @@ public final class SupportReportCodec {
 			entry.addProperty("state", result.state().name());
 			result.versionNumber().ifPresent(version -> entry.addProperty("versionNumber", version));
 			result.channel().ifPresent(channel -> entry.addProperty("channel", channel.name()));
+			result.newestSupportedGameVersion().ifPresent(version -> entry.addProperty("newestSupported", version));
 			if (result.quiltOnly()) {
 				entry.addProperty("quiltOnly", true);
 			}
@@ -45,6 +46,7 @@ public final class SupportReportCodec {
 					SupportState.valueOf(entry.get("state").getAsString()),
 					JsonValues.optionalString(entry, "versionNumber"),
 					JsonValues.optionalString(entry, "channel").map(ReleaseChannel::valueOf),
+					JsonValues.optionalString(entry, "newestSupported"),
 					entry.has("quiltOnly") && entry.get("quiltOnly").getAsBoolean()));
 		}
 		return new SupportReport(results, Instant.parse(json.get("finishedAt").getAsString()));

@@ -10,16 +10,18 @@ import de.stefantasie.modsversionsupport.domain.mod.InstalledMod;
 import de.stefantasie.modsversionsupport.http.JavaNetJsonHttpClient;
 import de.stefantasie.modsversionsupport.http.JsonHttpClient;
 import de.stefantasie.modsversionsupport.http.UserAgent;
-import de.stefantasie.modsversionsupport.modrinth.cache.VersionSupportCache;
+import de.stefantasie.modsversionsupport.modrinth.cache.TimedCache;
 import de.stefantasie.modsversionsupport.modrinth.hash.HashLookupGateway;
 import de.stefantasie.modsversionsupport.modrinth.http.RateLimiter;
 import de.stefantasie.modsversionsupport.modrinth.http.Sleeper;
 import de.stefantasie.modsversionsupport.modrinth.http.ThrottledModrinthHttp;
+import de.stefantasie.modsversionsupport.modrinth.project.ProjectGateway;
 import de.stefantasie.modsversionsupport.modrinth.project.ProjectVersionGateway;
 import de.stefantasie.modsversionsupport.modrinth.search.ModSearchGateway;
 import de.stefantasie.modsversionsupport.mojang.versions.VersionCatalogProvider;
 import de.stefantasie.modsversionsupport.mojang.versions.VersionCatalogStore;
 import de.stefantasie.modsversionsupport.mojang.versions.VersionManifestGateway;
+import de.stefantasie.modsversionsupport.mojang.versions.VersionRanking;
 import de.stefantasie.modsversionsupport.platform.installed.InstalledModScanner;
 import de.stefantasie.modsversionsupport.storage.ProfileStore;
 import de.stefantasie.modsversionsupport.storage.StorageLayout;
@@ -64,7 +66,10 @@ public final class ClientRuntime implements AutoCloseable {
 		ProfileChecker checker = new ProfileChecker(
 				new ModProjectResolver(new HashLookupGateway(modrinthHttp)),
 				new ProjectVersionGateway(modrinthHttp, LOADERS),
-				VersionSupportCache.lasting(initialSettings.cacheLifetime()),
+				new ProjectGateway(modrinthHttp),
+				TimedCache.lasting(initialSettings.cacheLifetime()),
+				TimedCache.lasting(initialSettings.cacheLifetime()),
+				() -> VersionRanking.of(versions.get()),
 				Instant::now);
 		this.icons = new ModIconTextures(new IconDownloader(new IconCache(StorageLayout.iconCache()), userAgent(initialSettings.contact())));
 		this.checks = new CheckService(checker, initialSettings.parallelProfiles());

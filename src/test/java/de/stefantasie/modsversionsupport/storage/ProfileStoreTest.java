@@ -31,7 +31,7 @@ class ProfileStoreTest {
 		VersionProfile profile = VersionProfile
 				.create("26.2", "26.2", ModSelection.allOf(List.of(sodium, extra)).withToggled(extra.key()))
 				.withReport(new SupportReport(
-						List.of(ModSupport.supported(sodium.key(), "mc26.2-0.9.3", ReleaseChannel.BETA, true)),
+						List.of(ModSupport.supported(sodium.key(), "mc26.2-0.9.3", ReleaseChannel.BETA, "26.2", true)),
 						Instant.parse("2026-08-20T20:00:00Z")));
 		store.save(ProfileList.of(List.of(profile)));
 
@@ -45,6 +45,7 @@ class ProfileStoreTest {
 		assertTrue(restored.lastReport().isPresent());
 		assertEquals(ReleaseChannel.BETA, restored.lastReport().get().results().getFirst().channel().orElseThrow());
 		assertTrue(restored.lastReport().get().results().getFirst().quiltOnly());
+		assertEquals("26.2", restored.lastReport().get().results().getFirst().newestSupportedGameVersion().orElseThrow());
 	}
 
 	@Test
