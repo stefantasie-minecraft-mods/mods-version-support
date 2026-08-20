@@ -1,5 +1,6 @@
 package de.stefantasie.modsversionsupport.ui.screen.overview;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import de.stefantasie.modsversionsupport.ModsVersionSupport;
 import de.stefantasie.modsversionsupport.domain.profile.VersionProfile;
 import de.stefantasie.modsversionsupport.runtime.ClientRuntime;
@@ -12,6 +13,7 @@ import de.stefantasie.modsversionsupport.ui.settings.SettingsScreens;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 
 /** Lists the version profiles and their result. */
@@ -48,6 +50,26 @@ public final class ProfileOverviewScreen extends Screen {
 				.bounds(width - 28, 8, 20, 20).build());
 
 		runtime.checks().checkAll();
+		setInitialFocus(list);
+	}
+
+	@Override
+	public boolean keyPressed(KeyEvent event) {
+		if (isEnter(event) && list.selectedProfile().isPresent()) {
+			openDetail(list.selectedProfile().orElseThrow());
+			return true;
+		}
+		if (event.key() == InputConstants.KEY_DOWN) {
+			return list.selectNeighbour(1);
+		}
+		if (event.key() == InputConstants.KEY_UP) {
+			return list.selectNeighbour(-1);
+		}
+		return super.keyPressed(event);
+	}
+
+	private static boolean isEnter(KeyEvent event) {
+		return event.key() == InputConstants.KEY_RETURN || event.key() == InputConstants.KEY_NUMPADENTER;
 	}
 
 	@Override

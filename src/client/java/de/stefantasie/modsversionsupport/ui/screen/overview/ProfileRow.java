@@ -76,6 +76,9 @@ public final class ProfileRow extends ContainerObjectSelectionList.Entry<Profile
 		int right = getContentRight();
 
 		extractor.fill(left, top, right, getContentBottom(), Palette.withAlpha(Palette.ROW_BACKGROUND, alpha));
+		if (hovered) {
+			extractor.outline(left, top, right - left, getContentHeight(), Palette.SELECTION);
+		}
 		drawLabels(extractor, left + LABEL_LEFT, top, alpha);
 		drawBar(extractor, current, right, top, alpha);
 		layoutButtons(extractor, right, top, mouseX, mouseY, partialTick);

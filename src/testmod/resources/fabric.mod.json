@@ -9,7 +9,8 @@
 			"de.stefantasie.modsversionsupport.testmod.OverviewScreenTest",
 			"de.stefantasie.modsversionsupport.testmod.EditorScreenTest",
 			"de.stefantasie.modsversionsupport.testmod.DetailScreenTest",
-			"de.stefantasie.modsversionsupport.testmod.SettingsScreenTest"
+			"de.stefantasie.modsversionsupport.testmod.SettingsScreenTest",
+			"de.stefantasie.modsversionsupport.testmod.KeyboardNavigationTest"
 		]
 	},
 	"depends": {

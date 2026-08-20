@@ -6,6 +6,7 @@ public final class Palette {
 	public static final int TEXT_MUTED = 0xFF9B9B9B;
 	public static final int ROW_BACKGROUND = 0x50000000;
 	public static final int ROW_BORDER = 0x40FFFFFF;
+	public static final int SELECTION = 0xFFFFFFFF;
 	public static final int BAR_TRACK = 0xFF2B2B2B;
 	public static final int PROGRESS = 0xFF7C7C7C;
 	public static final int SUPPORTED = 0xFF3FA34D;
