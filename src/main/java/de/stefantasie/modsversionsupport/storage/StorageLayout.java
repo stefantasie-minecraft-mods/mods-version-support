@@ -22,7 +22,7 @@ public final class StorageLayout {
 		return directory().resolve("icons");
 	}
 
-	public static Path responseCache() {
-		return directory().resolve("modrinth-cache.json");
+	public static Path versionCache() {
+		return directory().resolve("minecraft-versions.json");
 	}
 }

@@ -5,8 +5,8 @@
 	"name": "Mods Version Support Test Harness",
 	"environment": "client",
 	"entrypoints": {
-		"client": [
-			"de.stefantasie.modsversionsupport.testmod.ScreenshotHarness"
+		"fabric-client-gametest": [
+			"de.stefantasie.modsversionsupport.testmod.OverviewScreenTest"
 		]
 	},
 	"depends": {

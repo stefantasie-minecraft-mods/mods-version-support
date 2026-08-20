@@ -1,3 +1,12 @@
 {
-	"mods-version-support.name": "Mods Version Support"
+	"mods-version-support.name": "Mods Version Support",
+	"mods-version-support.key.open_overview": "Versionsübersicht öffnen",
+	"mods-version-support.overview.title": "Mods Version Support",
+	"mods-version-support.overview.target": "Minecraft %s",
+	"mods-version-support.overview.add": "Version hinzufügen",
+	"mods-version-support.overview.refresh": "Aktualisieren",
+	"mods-version-support.overview.empty": "Noch keine Version. Füge eine hinzu, um den Stand deiner Mods zu sehen.",
+	"mods-version-support.overview.move_up": "Nach oben",
+	"mods-version-support.overview.move_down": "Nach unten",
+	"mods-version-support.overview.delete": "Löschen"
 }

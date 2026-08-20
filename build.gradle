@@ -44,6 +44,13 @@ loom {
 			name = "Testmod Client"
 			source sourceSets.testmod
 		}
+		clientGameTest {
+			client()
+			name = "Client Game Test"
+			source sourceSets.testmod
+			property("fabric.client.gametest")
+			property("fabric.client.gametest.modid", "mods-version-support-testmod")
+		}
 	}
 }
 

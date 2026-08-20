@@ -16,6 +16,9 @@
 	"entrypoints": {
 		"client": [
 			"de.stefantasie.modsversionsupport.entrypoint.ModsVersionSupportClient"
+		],
+		"modmenu": [
+			"de.stefantasie.modsversionsupport.ui.modmenu.ModsVersionSupportModMenu"
 		]
 	},
 	"depends": {
