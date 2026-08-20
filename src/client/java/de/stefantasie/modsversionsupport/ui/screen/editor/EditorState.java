@@ -4,6 +4,7 @@ import de.stefantasie.modsversionsupport.domain.mod.ModKey;
 import de.stefantasie.modsversionsupport.domain.mod.TrackedMod;
 import de.stefantasie.modsversionsupport.domain.profile.VersionProfile;
 import de.stefantasie.modsversionsupport.domain.selection.ModSelection;
+import de.stefantasie.modsversionsupport.domain.report.SupportReport;
 import java.util.Optional;
 
 /** The profile while it is being edited. */
@@ -71,6 +72,10 @@ public final class EditorState {
 
 	public void removeAll() {
 		selection = selection.withoutAll();
+	}
+
+	public Optional<SupportReport> lastReport() {
+		return edited.flatMap(VersionProfile::lastReport);
 	}
 
 	public boolean isNew() {

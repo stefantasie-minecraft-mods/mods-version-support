@@ -14,6 +14,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 /** One profile in the overview: name, version, percentage and the traffic light bar. */
@@ -29,11 +30,13 @@ public final class ProfileRow extends ContainerObjectSelectionList.Entry<Profile
 	private final Function<VersionProfile, CheckStatus> status;
 	private final Font font;
 	private final List<Button> buttons;
+	private final RowActions actions;
 
 	public ProfileRow(VersionProfile profile, Function<VersionProfile, CheckStatus> status, Font font, RowActions actions) {
 		this.profile = profile;
 		this.status = status;
 		this.font = font;
+		this.actions = actions;
 		this.buttons = List.of(
 				iconButton("▲", "overview.move_up", () -> actions.moveUp().accept(profile)),
 				iconButton("▼", "overview.move_down", () -> actions.moveDown().accept(profile)),
@@ -43,6 +46,15 @@ public final class ProfileRow extends ContainerObjectSelectionList.Entry<Profile
 
 	public VersionProfile profile() {
 		return profile;
+	}
+
+	@Override
+	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+		if (super.mouseClicked(event, doubleClick)) {
+			return true;
+		}
+		actions.open().accept(profile);
+		return true;
 	}
 
 	@Override

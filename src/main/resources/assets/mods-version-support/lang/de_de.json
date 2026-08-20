@@ -20,5 +20,15 @@
 	"mods-version-support.editor.select_none": "Auswahl aufheben",
 	"mods-version-support.editor.remove_selected": "Ausgewählte entfernen",
 	"mods-version-support.editor.remove_all": "Alle entfernen",
-	"mods-version-support.editor.save": "Speichern"
+	"mods-version-support.editor.save": "Speichern",
+	"mods-version-support.state.supported": "Bereit",
+	"mods-version-support.state.supported_prerelease": "Vorabversion",
+	"mods-version-support.state.unsupported": "Noch nicht",
+	"mods-version-support.state.not_on_modrinth": "Modrinth unbekannt",
+	"mods-version-support.state.failed": "Prüfung fehlgeschlagen",
+	"mods-version-support.state.pending": "Wird geprüft",
+	"mods-version-support.detail.order": "Sortierung: %s",
+	"mods-version-support.detail.order.availability": "Verfügbarkeit",
+	"mods-version-support.detail.order.name": "Name",
+	"mods-version-support.detail.order.source": "Herkunft"
 }

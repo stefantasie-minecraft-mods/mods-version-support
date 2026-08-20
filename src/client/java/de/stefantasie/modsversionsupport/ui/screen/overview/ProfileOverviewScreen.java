@@ -3,6 +3,7 @@ package de.stefantasie.modsversionsupport.ui.screen.overview;
 import de.stefantasie.modsversionsupport.ModsVersionSupport;
 import de.stefantasie.modsversionsupport.domain.profile.VersionProfile;
 import de.stefantasie.modsversionsupport.runtime.ClientRuntime;
+import de.stefantasie.modsversionsupport.ui.screen.detail.ProfileDetailScreen;
 import de.stefantasie.modsversionsupport.ui.screen.editor.ProfileEditorScreen;
 import de.stefantasie.modsversionsupport.ui.theme.Palette;
 import java.util.List;
@@ -60,7 +61,7 @@ public final class ProfileOverviewScreen extends Screen {
 	}
 
 	private void showProfiles() {
-		RowActions actions = new RowActions(this::openEditor, this::deleteProfile, this::moveUp, this::moveDown);
+		RowActions actions = new RowActions(this::openDetail, this::openEditor, this::deleteProfile, this::moveUp, this::moveDown);
 		List<ProfileRow> rows = runtime.profiles().all().stream()
 				.map(profile -> new ProfileRow(profile, runtime.checks()::statusOf, font, actions))
 				.toList();
@@ -69,6 +70,10 @@ public final class ProfileOverviewScreen extends Screen {
 
 	private void addProfile() {
 		minecraft.setScreen(ProfileEditorScreen.forNewProfile(runtime, this));
+	}
+
+	private void openDetail(VersionProfile profile) {
+		minecraft.setScreen(new ProfileDetailScreen(runtime, this, profile));
 	}
 
 	private void openEditor(VersionProfile profile) {

@@ -4,6 +4,8 @@ import de.stefantasie.modsversionsupport.ModsVersionSupport;
 import de.stefantasie.modsversionsupport.domain.mod.TrackedMod;
 import de.stefantasie.modsversionsupport.domain.profile.ProfileNames;
 import de.stefantasie.modsversionsupport.domain.profile.VersionProfile;
+import de.stefantasie.modsversionsupport.domain.report.ModSupportView;
+import de.stefantasie.modsversionsupport.domain.report.SupportOrder;
 import de.stefantasie.modsversionsupport.domain.selection.ModSelection;
 import de.stefantasie.modsversionsupport.runtime.ClientRuntime;
 import de.stefantasie.modsversionsupport.ui.theme.Palette;
@@ -24,7 +26,8 @@ public final class ProfileEditorScreen extends Screen {
 	private static final int LABEL_TOP = 32;
 	private static final int FIELD_TOP = 42;
 	private static final int SEARCH_TOP = 72;
-	private static final int LIST_TOP = 108;
+	private static final int ORDER_TOP = 96;
+	private static final int LIST_TOP = 116;
 	private static final int FOOTER_HEIGHT = 66;
 	private static final int CONTENT_WIDTH = 420;
 
@@ -34,6 +37,8 @@ public final class ProfileEditorScreen extends Screen {
 	private final VersionSuggestions versionSuggestions;
 	private final ModSuggestions modSuggestions;
 
+	private SupportOrder order = SupportOrder.AVAILABILITY;
+	private Button orderButton;
 	private EditBox nameField;
 	private EditBox versionField;
 	private EditBox searchField;
@@ -100,6 +105,9 @@ public final class ProfileEditorScreen extends Screen {
 					showMods();
 				}));
 		searchField.setResponder(typed -> searchAutocomplete.openForTyping());
+
+		orderButton = addRenderableWidget(Button.builder(orderLabel(), press -> cycleOrder())
+				.bounds(left + CONTENT_WIDTH - 150, ORDER_TOP, 150, 16).build());
 
 		modList = addRenderableWidget(new ModListWidget(minecraft, width, height - LIST_TOP - FOOTER_HEIGHT, LIST_TOP));
 		showMods();
@@ -178,9 +186,21 @@ public final class ProfileEditorScreen extends Screen {
 		versionAutocomplete.openWith(versionSuggestions.all());
 	}
 
+	private void cycleOrder() {
+		order = order.next();
+		orderButton.setMessage(orderLabel());
+		showMods();
+	}
+
+	private Component orderLabel() {
+		return Component.translatable(ModsVersionSupport.translationKey("detail.order"),
+				Component.translatable(ModsVersionSupport.translationKey("detail.order." + order.name().toLowerCase())));
+	}
+
 	private void showMods() {
-		List<ModRow> rows = state.selection().mods().stream()
-				.map(mod -> new ModRow(mod, state.selection().isSelected(mod.key()), font, this::toggle))
+		List<ModSupportView> views = ModSupportView.of(state.selection().mods(), state.lastReport());
+		List<ModRow> rows = order.sort(views).stream()
+				.map(view -> new ModRow(view, state.selection().isSelected(view.mod().key()), font, this::toggle))
 				.toList();
 		modList.show(rows);
 	}
