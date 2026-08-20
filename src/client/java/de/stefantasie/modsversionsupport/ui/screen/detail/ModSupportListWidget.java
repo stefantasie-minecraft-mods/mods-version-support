@@ -6,7 +6,7 @@ import net.minecraft.client.gui.components.ObjectSelectionList;
 
 public final class ModSupportListWidget extends ObjectSelectionList<ModSupportRow> {
 
-	private static final int ROW_HEIGHT = 24;
+	private static final int ROW_HEIGHT = 32;
 	private static final int ROW_WIDTH = 420;
 
 	public ModSupportListWidget(Minecraft minecraft, int width, int height, int top) {

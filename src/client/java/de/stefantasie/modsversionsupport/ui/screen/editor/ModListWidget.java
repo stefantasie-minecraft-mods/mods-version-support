@@ -6,7 +6,7 @@ import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 
 public final class ModListWidget extends ContainerObjectSelectionList<ModRow> {
 
-	private static final int ROW_HEIGHT = 24;
+	private static final int ROW_HEIGHT = 28;
 	private static final int ROW_WIDTH = 420;
 
 	public ModListWidget(Minecraft minecraft, int width, int height, int top) {

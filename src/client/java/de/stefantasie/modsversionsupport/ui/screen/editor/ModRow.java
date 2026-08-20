@@ -58,17 +58,18 @@ public final class ModRow extends ContainerObjectSelectionList.Entry<ModRow> {
 		int top = getContentY();
 
 		checkbox.setX(left + 2);
-		checkbox.setY(top + 2);
+		checkbox.setY(top + (getContentHeight() - checkbox.getHeight()) / 2);
 		checkbox.extractRenderState(extractor, mouseX, mouseY, partialTick);
 
-		ModIcon.draw(extractor, font, icons.iconFor(view.mod()), view.mod().displayName(), left + ICON_LEFT, top + 3);
-		extractor.text(font, Component.literal(view.mod().displayName()), left + TEXT_LEFT, top + 1, Palette.TEXT);
+		ModIcon.draw(extractor, font, icons.iconFor(view.mod()), view.mod().displayName(),
+				left + ICON_LEFT, top + (getContentHeight() - ModIcon.SIZE) / 2);
+		extractor.text(font, Component.literal(view.mod().displayName()), left + TEXT_LEFT, top + 3, Palette.TEXT);
 		extractor.text(font, Component.literal(view.mod().fileName().orElse("Modrinth")),
-				left + TEXT_LEFT, top + 12, Palette.TEXT_MUTED);
+				left + TEXT_LEFT, top + 14, Palette.TEXT_MUTED);
 
 		if (view.state() != SupportState.PENDING) {
 			int badgeWidth = SupportBadge.widthOf(font, view.state());
-			SupportBadge.draw(extractor, font, view.state(), getContentRight() - badgeWidth - 4, top + 6);
+			SupportBadge.draw(extractor, font, view.state(), getContentRight() - badgeWidth - 4, top + 8);
 		}
 	}
 }
