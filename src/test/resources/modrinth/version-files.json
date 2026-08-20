@@ -1,0 +1,20 @@
+{
+  "5fe5204ccc96a17340570db66a5b4127b8176246": {
+    "project_id": "P7dR8mSH",
+    "version_number": "0.155.2+26.1.2",
+    "game_versions": [
+      "26.1",
+      "26.1.1",
+      "26.1.2"
+    ]
+  },
+  "0b5cd2531cd3506e431cd2d739da3abceed08ea6": {
+    "project_id": "mOgUt4GM",
+    "version_number": "18.0.0",
+    "game_versions": [
+      "26.1",
+      "26.1.1",
+      "26.1.2"
+    ]
+  }
+}

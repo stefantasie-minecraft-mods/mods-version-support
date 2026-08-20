@@ -1,0 +1,32 @@
+{
+  "hits": [
+    {
+      "project_id": "AANobbMI",
+      "slug": "sodium",
+      "title": "Sodium",
+      "icon_url": "https://cdn.modrinth.com/data/AANobbMI/295862f4724dc3f78df3447ad6072b2dcd3ef0c9_96.webp",
+      "description": "A high-performance rendering engine replacement for Minecraft, which greatly improves frame rates and reduces micro-stutter."
+    },
+    {
+      "project_id": "PtjYWJkn",
+      "slug": "sodium-extra",
+      "title": "Sodium Extra",
+      "icon_url": "https://cdn.modrinth.com/data/PtjYWJkn/0df4fb22a11e1dcb5e83cb0aadd275b571aca7a9_96.webp",
+      "description": "A Sodium addon that adds features that shouldn't be in Sodium."
+    },
+    {
+      "project_id": "Bh37bMuy",
+      "slug": "reeses-sodium-options",
+      "title": "Reese's Sodium Options",
+      "icon_url": "https://cdn.modrinth.com/data/Bh37bMuy/icon.png",
+      "description": "Alternative Options Menu for Sodium"
+    },
+    {
+      "project_id": "EIa1eiMm",
+      "slug": "sodium-shadowy-path-blocks",
+      "title": "Sodium Shadowy Path Blocks (SSPB)",
+      "icon_url": "https://cdn.modrinth.com/data/EIa1eiMm/7ea3bc26470ba1f45b1c980d5058b033a752396b_96.webp",
+      "description": "Reintroduces vanilla-like smooth lighting to non-full blocks (e.g. dirt paths and how they have dark shading when directly next to a full block) when using Sodium. "
+    }
+  ]
+}
