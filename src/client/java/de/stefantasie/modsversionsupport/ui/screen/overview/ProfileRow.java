@@ -22,8 +22,8 @@ public final class ProfileRow extends ContainerObjectSelectionList.Entry<Profile
 
 	private static final int BUTTON_SIZE = 18;
 	private static final int BAR_WIDTH = 110;
-	private static final int BAR_HEIGHT = 10;
-	private static final int STATUS_WIDTH = 34;
+	private static final int BAR_HEIGHT = 12;
+	private static final int SPINNER_WIDTH = 22;
 	private static final float DIMMED = 0.45f;
 
 	private final VersionProfile profile;
@@ -76,19 +76,12 @@ public final class ProfileRow extends ContainerObjectSelectionList.Entry<Profile
 		int right = getContentRight();
 
 		extractor.fill(left, top, right, getContentBottom(), Palette.withAlpha(Palette.ROW_BACKGROUND, alpha));
-		drawStatus(extractor, current, left, top, alpha);
-		drawLabels(extractor, left + STATUS_WIDTH, top, alpha);
+		if (current.running()) {
+			Spinner.draw(extractor, left + 4, top + (getContentHeight() - Spinner.SIZE) / 2);
+		}
+		drawLabels(extractor, left + SPINNER_WIDTH, top, alpha);
 		drawBar(extractor, current, right, top, alpha);
 		layoutButtons(extractor, right, top, mouseX, mouseY, partialTick);
-	}
-
-	private void drawStatus(GuiGraphicsExtractor extractor, CheckStatus current, int left, int top, float alpha) {
-		if (current.running()) {
-			Spinner.draw(extractor, left + 8, top + 8);
-			return;
-		}
-		String percent = current.report().map(report -> report.percent() + "%").orElse("--");
-		extractor.text(font, percent, left + 6, top + 10, Palette.withAlpha(Palette.TEXT, alpha));
 	}
 
 	private void drawLabels(GuiGraphicsExtractor extractor, int left, int top, float alpha) {
@@ -99,12 +92,20 @@ public final class ProfileRow extends ContainerObjectSelectionList.Entry<Profile
 
 	private void drawBar(GuiGraphicsExtractor extractor, CheckStatus current, int right, int top, float alpha) {
 		int barLeft = right - buttonBlockWidth() - BAR_WIDTH - 6;
+		int barTop = top + (getContentHeight() - BAR_HEIGHT) / 2;
 		if (current.running()) {
-			SupportBar.drawProgress(extractor, barLeft, top + 10, BAR_WIDTH, BAR_HEIGHT, current.progress().fraction(), alpha);
-			return;
+			SupportBar.drawProgress(extractor, barLeft, barTop, BAR_WIDTH, BAR_HEIGHT, current.progress().fraction(), alpha);
+		} else {
+			double supported = current.report().map(report -> report.supportedRatio()).orElse(0d);
+			SupportBar.drawResult(extractor, barLeft, barTop, BAR_WIDTH, BAR_HEIGHT, supported, alpha);
 		}
-		double supported = current.report().map(report -> report.supportedRatio()).orElse(0d);
-		SupportBar.drawResult(extractor, barLeft, top + 10, BAR_WIDTH, BAR_HEIGHT, supported, alpha);
+		drawPercentOnBar(extractor, current, barLeft, barTop, alpha);
+	}
+
+	private void drawPercentOnBar(GuiGraphicsExtractor extractor, CheckStatus current, int barLeft, int barTop, float alpha) {
+		Component percent = Component.literal(current.report().map(report -> report.percent() + "%").orElse("--"));
+		int textLeft = barLeft + (BAR_WIDTH - font.width(percent)) / 2;
+		extractor.text(font, percent, textLeft, barTop + 2, Palette.withAlpha(Palette.TEXT, alpha), true);
 	}
 
 	private void layoutButtons(GuiGraphicsExtractor extractor, int right, int top, int mouseX, int mouseY, float partialTick) {
