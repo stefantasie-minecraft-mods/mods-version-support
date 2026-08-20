@@ -19,6 +19,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -43,6 +44,7 @@ public final class ProfileEditorScreen extends Screen {
 
 	private SupportOrder order = SupportOrder.AVAILABILITY;
 	private Button orderButton;
+	private Button versionDropdownButton;
 	private EditBox nameField;
 	private EditBox versionField;
 	private EditBox searchField;
@@ -96,7 +98,7 @@ public final class ProfileEditorScreen extends Screen {
 			versionAutocomplete.openForTyping();
 		});
 
-		addRenderableWidget(Button.builder(Component.literal("▼"), press -> openVersionDropdown())
+		versionDropdownButton = addRenderableWidget(Button.builder(Component.literal("▼"), press -> openVersionDropdown())
 				.bounds(left + CONTENT_WIDTH - 20, FIELD_TOP, 20, FIELD_HEIGHT).build());
 
 		searchField = addRenderableWidget(new EditBox(font, left, SEARCH_TOP, CONTENT_WIDTH, FIELD_HEIGHT,
@@ -142,7 +144,30 @@ public final class ProfileEditorScreen extends Screen {
 		if (versionAutocomplete.pickAt(event.x(), event.y()) || searchAutocomplete.pickAt(event.x(), event.y())) {
 			return true;
 		}
-		return super.mouseClicked(event, doubleClick);
+		boolean handled = super.mouseClicked(event, doubleClick);
+		closePopupsUnrelatedTo(event);
+		return handled;
+	}
+
+	@Override
+	public boolean keyPressed(KeyEvent event) {
+		if (versionAutocomplete.handleKey(event) || searchAutocomplete.handleKey(event)) {
+			return true;
+		}
+		return super.keyPressed(event);
+	}
+
+	private void closePopupsUnrelatedTo(MouseButtonEvent event) {
+		if (!versionField.isMouseOver(event.x(), event.y()) && !isOverVersionDropdownButton(event)) {
+			versionAutocomplete.close();
+		}
+		if (!searchField.isMouseOver(event.x(), event.y())) {
+			searchAutocomplete.close();
+		}
+	}
+
+	private boolean isOverVersionDropdownButton(MouseButtonEvent event) {
+		return versionDropdownButton.isMouseOver(event.x(), event.y());
 	}
 
 	@Override
@@ -185,8 +210,11 @@ public final class ProfileEditorScreen extends Screen {
 	}
 
 	private void openVersionDropdown() {
-		versionField.setFocused(true);
-		setFocused(versionField);
+		if (versionAutocomplete.isOpen()) {
+			versionAutocomplete.close();
+			return;
+		}
+		searchAutocomplete.close();
 		versionAutocomplete.openWith(versionSuggestions.all());
 	}
 

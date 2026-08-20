@@ -1,11 +1,13 @@
 package de.stefantasie.modsversionsupport.ui.widget.autocomplete;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.input.KeyEvent;
 
-/** Ties a text field to its suggestion source and the popup below it. */
+/** Ties a text field to its suggestion source, the popup below it and the keys that drive both. */
 public final class AutocompleteBinding {
 
 	private final EditBox field;
@@ -38,9 +40,13 @@ public final class AutocompleteBinding {
 		overlay.hide();
 	}
 
+	public boolean isOpen() {
+		return open && overlay.isVisible();
+	}
+
 	/** Late answers from a search only reach the popup because it refreshes while it is open. */
 	public void draw(GuiGraphicsExtractor extractor, int mouseX, int mouseY) {
-		if (!open || !field.isFocused()) {
+		if (!open) {
 			overlay.hide();
 			return;
 		}
@@ -54,9 +60,46 @@ public final class AutocompleteBinding {
 			return false;
 		}
 		return overlay.clickedAt(mouseX, mouseY).map(suggestion -> {
-			onPick.accept(suggestion);
-			close();
+			pick(suggestion);
 			return true;
 		}).orElse(false);
+	}
+
+	public boolean handleKey(KeyEvent event) {
+		if (!isOpen()) {
+			return false;
+		}
+		int key = event.key();
+		if (key == InputConstants.KEY_DOWN) {
+			return moveHighlight(1);
+		}
+		if (key == InputConstants.KEY_UP) {
+			return moveHighlight(-1);
+		}
+		if (key == InputConstants.KEY_RETURN || key == InputConstants.KEY_NUMPADENTER) {
+			return pickHighlighted();
+		}
+		if (key == InputConstants.KEY_ESCAPE) {
+			close();
+			return true;
+		}
+		return false;
+	}
+
+	private boolean moveHighlight(int steps) {
+		overlay.moveHighlight(steps);
+		return true;
+	}
+
+	private boolean pickHighlighted() {
+		return overlay.highlightedSuggestion().map(suggestion -> {
+			pick(suggestion);
+			return true;
+		}).orElse(false);
+	}
+
+	private void pick(Suggestion suggestion) {
+		onPick.accept(suggestion);
+		close();
 	}
 }

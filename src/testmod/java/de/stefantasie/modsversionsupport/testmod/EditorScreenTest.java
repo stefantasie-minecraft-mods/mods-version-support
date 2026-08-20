@@ -23,6 +23,15 @@ public final class EditorScreenTest implements FabricClientGameTest {
 		context.waitTicks(20);
 		context.takeScreenshot("editor-version-suggestions");
 
+		pickSecondSuggestionWithArrowKeys(context);
+		context.waitTicks(5);
+		context.takeScreenshot("editor-version-picked-by-keyboard");
+
+		openDropdownButton(context);
+		context.waitTicks(5);
+		context.takeScreenshot("editor-dropdown");
+		context.getInput().pressKey(GLFW.GLFW_KEY_ESCAPE);
+
 		typeIntoSearchField(context);
 		context.waitTicks(60);
 		context.takeScreenshot("editor-mod-suggestions");
@@ -35,6 +44,23 @@ public final class EditorScreenTest implements FabricClientGameTest {
 		context.getInput().pressKey(GLFW.GLFW_KEY_TAB);
 		clearField(context);
 		context.getInput().typeChars("26.");
+	}
+
+	private void pickSecondSuggestionWithArrowKeys(ClientGameTestContext context) {
+		context.getInput().pressKey(GLFW.GLFW_KEY_DOWN);
+		context.getInput().pressKey(GLFW.GLFW_KEY_DOWN);
+		context.getInput().pressKey(GLFW.GLFW_KEY_ENTER);
+	}
+
+	private void openDropdownButton(ClientGameTestContext context) {
+		double[] target = context.computeOnClient(client -> {
+			double scale = client.getWindow().getGuiScale();
+			double width = client.getWindow().getGuiScaledWidth();
+			return new double[] {(width / 2 + 200) * scale, 52 * scale};
+		});
+		context.getInput().setCursorPos(target[0], target[1]);
+		context.waitTick();
+		context.getInput().pressMouse(0);
 	}
 
 	private void clearField(ClientGameTestContext context) {

@@ -14,10 +14,13 @@ public final class SuggestionOverlay {
 	private static final int ENTRY_HEIGHT = 18;
 	private static final int MAX_ENTRIES = 7;
 	private static final int BACKGROUND = 0xFF16121A;
+	private static final int HIGHLIGHT = 0xFF3C3448;
+	private static final int NOTHING_HIGHLIGHTED = -1;
 
 	private final Font font;
 	private final SuggestionIcons icons;
 	private List<Suggestion> suggestions = List.of();
+	private int highlighted = NOTHING_HIGHLIGHTED;
 	private int x;
 	private int y;
 	private int width;
@@ -34,15 +37,31 @@ public final class SuggestionOverlay {
 		this.width = fieldWidth;
 		this.suggestions = found.size() > MAX_ENTRIES ? found.subList(0, MAX_ENTRIES) : found;
 		this.visible = !this.suggestions.isEmpty();
+		if (highlighted >= this.suggestions.size()) {
+			highlighted = NOTHING_HIGHLIGHTED;
+		}
 	}
 
 	public void hide() {
 		visible = false;
 		suggestions = List.of();
+		highlighted = NOTHING_HIGHLIGHTED;
 	}
 
 	public boolean isVisible() {
 		return visible;
+	}
+
+	public void moveHighlight(int steps) {
+		if (suggestions.isEmpty()) {
+			return;
+		}
+		int next = highlighted == NOTHING_HIGHLIGHTED && steps < 0 ? suggestions.size() - 1 : highlighted + steps;
+		highlighted = Math.floorMod(next, suggestions.size());
+	}
+
+	public Optional<Suggestion> highlightedSuggestion() {
+		return highlighted == NOTHING_HIGHLIGHTED ? Optional.empty() : Optional.of(suggestions.get(highlighted));
 	}
 
 	public void draw(GuiGraphicsExtractor extractor, int mouseX, int mouseY) {
@@ -55,19 +74,12 @@ public final class SuggestionOverlay {
 
 		for (int index = 0; index < suggestions.size(); index++) {
 			int entryTop = y + index * ENTRY_HEIGHT;
-			if (isOver(mouseX, mouseY, entryTop)) {
+			if (index == highlighted) {
+				extractor.fill(x + 1, entryTop, x + width - 1, entryTop + ENTRY_HEIGHT, HIGHLIGHT);
+			} else if (isOver(mouseX, mouseY, entryTop)) {
 				extractor.fill(x + 1, entryTop, x + width - 1, entryTop + ENTRY_HEIGHT, Palette.ROW_BACKGROUND);
 			}
-			Suggestion suggestion = suggestions.get(index);
-			Optional<Identifier> icon = icons.iconFor(suggestion);
-			int labelLeft = x + 4;
-			if (icon.isPresent()) {
-				ModIcon.draw(extractor, font, icon, suggestion.label().getString(), labelLeft, entryTop - 1);
-				labelLeft += ModIcon.SIZE + 4;
-			}
-			extractor.text(font, suggestion.label(), labelLeft, entryTop + 3, Palette.TEXT);
-			suggestion.detail().ifPresent(detail -> extractor.text(
-					font, detail, x + width - 4 - font.width(detail), entryTop + 3, Palette.TEXT_MUTED));
+			drawEntry(extractor, suggestions.get(index), entryTop);
 		}
 	}
 
@@ -82,6 +94,18 @@ public final class SuggestionOverlay {
 			}
 		}
 		return Optional.empty();
+	}
+
+	private void drawEntry(GuiGraphicsExtractor extractor, Suggestion suggestion, int entryTop) {
+		Optional<Identifier> icon = icons.iconFor(suggestion);
+		int labelLeft = x + 4;
+		if (icon.isPresent()) {
+			ModIcon.draw(extractor, font, icon, suggestion.label().getString(), labelLeft, entryTop - 1);
+			labelLeft += ModIcon.SIZE + 4;
+		}
+		extractor.text(font, suggestion.label(), labelLeft, entryTop + 3, Palette.TEXT);
+		suggestion.detail().ifPresent(detail -> extractor.text(
+				font, detail, x + width - 4 - font.width(detail), entryTop + 3, Palette.TEXT_MUTED));
 	}
 
 	private boolean isOver(int mouseX, int mouseY, int entryTop) {
