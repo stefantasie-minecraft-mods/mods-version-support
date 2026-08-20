@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 /** Keeps the last answer on screen while a slower one is on its way. */
-public final class AsyncSuggestionSource implements SuggestionSource, AutoCloseable {
+public final class AsyncSuggestionSource implements SuggestionSource {
 
 	private final Function<String, List<Suggestion>> lookup;
 	private final Executor executor;
@@ -32,11 +32,6 @@ public final class AsyncSuggestionSource implements SuggestionSource, AutoClosea
 					.exceptionally(failure -> null);
 		}
 		return latest.get();
-	}
-
-	@Override
-	public void close() {
-		latest.set(List.of());
 	}
 
 	private void acceptWhenStillWanted(String query, List<Suggestion> found) {

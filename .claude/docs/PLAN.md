@@ -33,7 +33,8 @@ Settled with Stefantasie before implementation started.
   count as supported as well but paint amber, and the detail screen names the channel.
 - Opening the overview starts a check for every profile, served from the response cache. A
   refresh action bypasses the cache.
-- The bar carries a red to warm amber to green gradient across its full width and is clipped
+- While a check runs the bar is plain grey and shows how far the run has come. The red to warm
+  amber to green gradient belongs to the finished result: it spans the full width and is clipped
   at the percentage, so a low value ends inside the red part.
 - Entry points: Mod Menu, a key binding without a default key, and the client command
   `/modsversionsupport`.
@@ -195,3 +196,19 @@ is written from the start.
   rendered above the following widgets, which needs care with focus and z-order.
 - Modrinth marks support per project version, and some mods list a version as supported that
   in practice needs a different loader build. The check reports what Modrinth states.
+
+## What was built
+
+Every phase of the plan is in the repository, one commit each. Two details differ from the
+outline above:
+
+- The overview and the editor were split the way the plan lists them, but the plus button only
+  gained its editor in the editor phase; there was no interim quick-add.
+- Icons in the overview rows were not needed: that screen lists profiles, not mods. Icons appear
+  in the editor, the detail screen and the Modrinth search.
+
+Verification: 55 unit tests plus client game tests that open every screen, type into the
+autocomplete fields and record screenshots. The built jar was loaded into a copy of the Prism
+instance and the game reached its title screen with 59 mods, this one among them.
+
+![Overview](../../docs/overview.png)

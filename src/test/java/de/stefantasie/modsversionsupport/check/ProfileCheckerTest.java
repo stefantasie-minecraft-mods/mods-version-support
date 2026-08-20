@@ -12,6 +12,7 @@ import de.stefantasie.modsversionsupport.domain.report.SupportReport;
 import de.stefantasie.modsversionsupport.domain.report.SupportState;
 import de.stefantasie.modsversionsupport.domain.selection.ModSelection;
 import de.stefantasie.modsversionsupport.http.RecordingJsonHttpClient;
+import de.stefantasie.modsversionsupport.http.UnreachableJsonHttpClient;
 import de.stefantasie.modsversionsupport.modrinth.cache.VersionSupportCache;
 import de.stefantasie.modsversionsupport.modrinth.hash.HashLookupGateway;
 import de.stefantasie.modsversionsupport.modrinth.project.ProjectVersionGateway;
@@ -81,6 +82,20 @@ class ProfileCheckerTest {
 		}, () -> false);
 
 		assertEquals(1, versionHttp.requestedUris().size());
+	}
+
+	@Test
+	void anUnreachableApiMarksModsAsFailed() {
+		ProfileChecker offline = new ProfileChecker(
+				new ModProjectResolver(new HashLookupGateway(RecordingJsonHttpClient.answering("version-files.json"))),
+				new ProjectVersionGateway(UnreachableJsonHttpClient.answering(503), List.of("fabric")),
+				VersionSupportCache.lasting(Duration.ofMinutes(10)),
+				() -> Instant.parse("2026-08-20T20:00:00Z"));
+
+		SupportReport report = offline.check(profileWith(fabricApi), progress -> {
+		}, () -> false);
+
+		assertEquals(SupportState.FAILED, report.results().getFirst().state());
 	}
 
 	@Test

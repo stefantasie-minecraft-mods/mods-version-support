@@ -32,10 +32,6 @@ public final class RunningCheck {
 		return !report.isDone();
 	}
 
-	public boolean isCancelled() {
-		return cancelled.get();
-	}
-
 	public void cancel() {
 		cancelled.set(true);
 	}

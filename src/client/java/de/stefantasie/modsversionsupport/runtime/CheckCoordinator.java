@@ -5,7 +5,6 @@ import de.stefantasie.modsversionsupport.check.RunningCheck;
 import de.stefantasie.modsversionsupport.domain.profile.ProfileId;
 import de.stefantasie.modsversionsupport.domain.profile.VersionProfile;
 import de.stefantasie.modsversionsupport.domain.report.SupportReport;
-import java.util.List;
 import java.util.Optional;
 
 /** Starts checks and hands their results back to the stored profiles. */
@@ -40,10 +39,6 @@ public final class CheckCoordinator {
 		RunningCheck running = check.get();
 		Optional<SupportReport> report = running.finishedReport().or(profile::lastReport);
 		return new CheckStatus(running.isRunning(), running.progress(), report);
-	}
-
-	public boolean anyRunning(List<VersionProfile> profiles) {
-		return profiles.stream().anyMatch(profile -> statusOf(profile).running());
 	}
 
 	private void storeReport(ProfileId id, SupportReport report) {

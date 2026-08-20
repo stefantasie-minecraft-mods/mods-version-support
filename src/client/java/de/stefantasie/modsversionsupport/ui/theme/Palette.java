@@ -4,7 +4,6 @@ public final class Palette {
 
 	public static final int TEXT = 0xFFEDEDED;
 	public static final int TEXT_MUTED = 0xFF9B9B9B;
-	public static final int TEXT_DISABLED = 0xFF6E6E6E;
 	public static final int ROW_BACKGROUND = 0x50000000;
 	public static final int ROW_BORDER = 0x40FFFFFF;
 	public static final int BAR_TRACK = 0xFF2B2B2B;

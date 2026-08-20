@@ -24,11 +24,11 @@ public final class SupportBadge {
 		return DOT_SIZE + 4 + font.width(labelOf(state));
 	}
 
-	public static Component labelOf(SupportState state) {
+	private static Component labelOf(SupportState state) {
 		return Component.translatable(ModsVersionSupport.translationKey("state." + state.name().toLowerCase()));
 	}
 
-	public static int colourOf(SupportState state) {
+	private static int colourOf(SupportState state) {
 		return switch (state) {
 			case SUPPORTED -> Palette.SUPPORTED;
 			case SUPPORTED_PRERELEASE -> Palette.PRERELEASE;
