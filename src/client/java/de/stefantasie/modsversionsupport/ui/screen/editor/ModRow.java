@@ -2,11 +2,10 @@ package de.stefantasie.modsversionsupport.ui.screen.editor;
 
 import de.stefantasie.modsversionsupport.domain.mod.TrackedMod;
 import de.stefantasie.modsversionsupport.domain.report.ModSupportView;
-import de.stefantasie.modsversionsupport.domain.report.SupportState;
 import de.stefantasie.modsversionsupport.ui.icon.ModIconTextures;
 import de.stefantasie.modsversionsupport.ui.theme.Palette;
 import de.stefantasie.modsversionsupport.ui.widget.icon.ModIcon;
-import de.stefantasie.modsversionsupport.ui.widget.list.SupportBadge;
+import de.stefantasie.modsversionsupport.ui.widget.list.SupportColumn;
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
@@ -22,6 +21,7 @@ public final class ModRow extends ContainerObjectSelectionList.Entry<ModRow> {
 
 	private static final int ICON_LEFT = 24;
 	private static final int TEXT_LEFT = 46;
+	private static final int LINE_GAP = 11;
 
 	private final ModSupportView view;
 	private final Font font;
@@ -67,9 +67,6 @@ public final class ModRow extends ContainerObjectSelectionList.Entry<ModRow> {
 		extractor.text(font, Component.literal(view.mod().fileName().orElse("Modrinth")),
 				left + TEXT_LEFT, top + 14, Palette.TEXT_MUTED);
 
-		if (view.state() != SupportState.PENDING) {
-			int badgeWidth = SupportBadge.widthOf(font, view.state());
-			SupportBadge.draw(extractor, font, view.state(), getContentRight() - badgeWidth - 4, top + 8);
-		}
+		SupportColumn.draw(extractor, font, view, getContentRight() - 4, top + 3, LINE_GAP);
 	}
 }

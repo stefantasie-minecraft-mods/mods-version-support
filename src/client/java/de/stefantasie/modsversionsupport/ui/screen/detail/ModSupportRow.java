@@ -4,7 +4,7 @@ import de.stefantasie.modsversionsupport.domain.report.ModSupportView;
 import de.stefantasie.modsversionsupport.ui.icon.ModIconTextures;
 import de.stefantasie.modsversionsupport.ui.theme.Palette;
 import de.stefantasie.modsversionsupport.ui.widget.icon.ModIcon;
-import de.stefantasie.modsversionsupport.ui.widget.list.SupportBadge;
+import de.stefantasie.modsversionsupport.ui.widget.list.SupportColumn;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ObjectSelectionList;
@@ -50,15 +50,6 @@ public final class ModSupportRow extends ObjectSelectionList.Entry<ModSupportRow
 		extractor.text(font, Component.literal(view.mod().fileName().orElse("Modrinth")),
 				left + TEXT_LEFT, top + SECOND_LINE, Palette.TEXT_MUTED);
 
-		int badgeWidth = SupportBadge.widthOf(font, view.state());
-		SupportBadge.draw(extractor, font, view.state(), right - EDGE - badgeWidth, top + FIRST_LINE);
-		drawReachedVersion(extractor, right, top);
-	}
-
-	private void drawReachedVersion(GuiGraphicsExtractor extractor, int right, int top) {
-		view.support().newestSupportedGameVersion().ifPresent(version -> {
-			Component label = Component.literal(version);
-			extractor.text(font, label, right - EDGE - font.width(label), top + SECOND_LINE, Palette.TEXT_MUTED);
-		});
+		SupportColumn.draw(extractor, font, view, right - EDGE, top + FIRST_LINE, SECOND_LINE - FIRST_LINE);
 	}
 }
