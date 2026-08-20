@@ -4,6 +4,8 @@ import de.stefantasie.modsversionsupport.ModsVersionSupport;
 import de.stefantasie.modsversionsupport.check.CheckService;
 import de.stefantasie.modsversionsupport.check.ModProjectResolver;
 import de.stefantasie.modsversionsupport.check.ProfileChecker;
+import de.stefantasie.modsversionsupport.config.Settings;
+import de.stefantasie.modsversionsupport.config.SettingsStore;
 import de.stefantasie.modsversionsupport.domain.mod.InstalledMod;
 import de.stefantasie.modsversionsupport.http.JavaNetJsonHttpClient;
 import de.stefantasie.modsversionsupport.http.JsonHttpClient;
@@ -40,11 +42,14 @@ public final class ClientRuntime implements AutoCloseable {
 	private final CheckCoordinator coordinator;
 	private final VersionCatalogProvider versions;
 	private final ModSearchGateway search;
-	private final AtomicReference<RuntimeSettings> settings;
+	private final SettingsStore settingsStore;
+	private final AtomicReference<Settings> settings;
 	private final List<InstalledMod> installedMods;
 	private final ModIconTextures icons;
 
-	private ClientRuntime(RuntimeSettings initialSettings) {
+	private ClientRuntime(SettingsStore settingsStore) {
+		this.settingsStore = settingsStore;
+		Settings initialSettings = settingsStore.load();
 		this.settings = new AtomicReference<>(initialSettings);
 		JsonHttpClient plainHttp = new JavaNetJsonHttpClient(userAgent(initialSettings.contact()));
 		JsonHttpClient modrinthHttp = new ThrottledModrinthHttp(
@@ -66,8 +71,8 @@ public final class ClientRuntime implements AutoCloseable {
 		this.coordinator = new CheckCoordinator(checks, profiles);
 	}
 
-	public static ClientRuntime start(RuntimeSettings settings) {
-		return new ClientRuntime(settings);
+	public static ClientRuntime start() {
+		return new ClientRuntime(new SettingsStore(StorageLayout.settingsFile()));
 	}
 
 	public ProfileRepository profiles() {
@@ -94,12 +99,14 @@ public final class ClientRuntime implements AutoCloseable {
 		return icons;
 	}
 
-	public RuntimeSettings settings() {
+	public Settings settings() {
 		return settings.get();
 	}
 
-	public void applySettings(RuntimeSettings updated) {
+	/** Thread count and cache lifetime are fixed when the runtime starts, so they apply after a restart. */
+	public void applySettings(Settings updated) {
 		settings.set(updated);
+		settingsStore.save(updated);
 	}
 
 	@Override

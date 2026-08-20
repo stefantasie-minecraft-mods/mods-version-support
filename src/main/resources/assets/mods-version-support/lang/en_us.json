@@ -30,5 +30,14 @@
 	"mods-version-support.detail.order": "Sort: %s",
 	"mods-version-support.detail.order.availability": "availability",
 	"mods-version-support.detail.order.name": "name",
-	"mods-version-support.detail.order.source": "source"
+	"mods-version-support.detail.order.source": "source",
+	"mods-version-support.settings.title": "Mods Version Support settings",
+	"mods-version-support.settings.category": "General",
+	"mods-version-support.settings.snapshots": "Offer snapshots",
+	"mods-version-support.settings.snapshots.tooltip": "Adds snapshot versions to the version picker.",
+	"mods-version-support.settings.parallel": "Profiles checked at once",
+	"mods-version-support.settings.cache": "Cache lifetime in minutes",
+	"mods-version-support.settings.restart_needed": "Takes effect after restarting the game.",
+	"mods-version-support.settings.contact": "Contact for the User-Agent",
+	"mods-version-support.settings.contact.tooltip": "Modrinth asks callers to identify themselves. An email address or username is enough."
 }

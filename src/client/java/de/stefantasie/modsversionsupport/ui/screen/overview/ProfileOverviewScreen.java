@@ -8,7 +8,9 @@ import de.stefantasie.modsversionsupport.ui.screen.editor.ProfileEditorScreen;
 import de.stefantasie.modsversionsupport.ui.theme.Palette;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import de.stefantasie.modsversionsupport.ui.settings.SettingsScreens;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
@@ -41,6 +43,9 @@ public final class ProfileOverviewScreen extends Screen {
 				.bounds(width / 2 - 50, buttonY, 100, BUTTON_HEIGHT).build());
 		addRenderableWidget(Button.builder(Component.translatable("gui.done"), press -> onClose())
 				.bounds(width / 2 + 54, buttonY, 100, BUTTON_HEIGHT).build());
+		addRenderableWidget(Button.builder(Component.literal("⚙"), press -> openSettings())
+				.tooltip(Tooltip.create(Component.translatable(ModsVersionSupport.translationKey("settings.title"))))
+				.bounds(width - 28, 8, 20, 20).build());
 
 		runtime.checks().checkAll();
 	}
@@ -70,6 +75,10 @@ public final class ProfileOverviewScreen extends Screen {
 
 	private void addProfile() {
 		minecraft.setScreen(ProfileEditorScreen.forNewProfile(runtime, this));
+	}
+
+	private void openSettings() {
+		minecraft.setScreen(SettingsScreens.create(runtime, this));
 	}
 
 	private void openDetail(VersionProfile profile) {
