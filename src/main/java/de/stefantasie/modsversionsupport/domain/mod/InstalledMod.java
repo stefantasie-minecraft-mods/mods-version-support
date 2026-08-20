@@ -3,7 +3,7 @@ package de.stefantasie.modsversionsupport.domain.mod;
 import java.util.Optional;
 
 /** A mod found in the running instance, identified towards Modrinth by its file hash. */
-public record InstalledMod(String modId, String displayName, String fileName, Optional<String> sha1)
+public record InstalledMod(String modId, String displayName, String jarFileName, Optional<String> sha1)
 		implements TrackedMod {
 
 	@Override
@@ -13,7 +13,7 @@ public record InstalledMod(String modId, String displayName, String fileName, Op
 
 	@Override
 	public Optional<String> fileName() {
-		return Optional.of(fileName);
+		return Optional.of(jarFileName);
 	}
 
 	@Override

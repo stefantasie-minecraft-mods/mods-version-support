@@ -33,8 +33,8 @@ Settled with Stefantasie before implementation started.
   count as supported as well but paint amber, and the detail screen names the channel.
 - Opening the overview starts a check for every profile, served from the response cache. A
   refresh action bypasses the cache.
-- The bar carries a red-to-green gradient across its full width and is clipped at the
-  percentage, so a low value ends inside the red part.
+- The bar carries a red to warm amber to green gradient across its full width and is clipped
+  at the percentage, so a low value ends inside the red part.
 - Entry points: Mod Menu, a key binding without a default key, and the client command
   `/modsversionsupport`.
 - The version picker lists releases; snapshots appear once the setting is enabled.
