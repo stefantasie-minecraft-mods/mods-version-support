@@ -1,18 +1,14 @@
 package de.stefantasie.modsversionsupport.ui.screen.overview;
 
 import de.stefantasie.modsversionsupport.ModsVersionSupport;
-import de.stefantasie.modsversionsupport.domain.mod.TrackedMod;
-import de.stefantasie.modsversionsupport.domain.profile.ProfileNames;
 import de.stefantasie.modsversionsupport.domain.profile.VersionProfile;
-import de.stefantasie.modsversionsupport.domain.selection.ModSelection;
-import de.stefantasie.modsversionsupport.mojang.versions.GameVersion;
 import de.stefantasie.modsversionsupport.runtime.ClientRuntime;
+import de.stefantasie.modsversionsupport.ui.screen.editor.ProfileEditorScreen;
 import de.stefantasie.modsversionsupport.ui.theme.Palette;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
 
 /** Lists the version profiles and their result. */
@@ -64,7 +60,7 @@ public final class ProfileOverviewScreen extends Screen {
 	}
 
 	private void showProfiles() {
-		RowActions actions = new RowActions(this::deleteProfile, this::moveUp, this::moveDown);
+		RowActions actions = new RowActions(this::openEditor, this::deleteProfile, this::moveUp, this::moveDown);
 		List<ProfileRow> rows = runtime.profiles().all().stream()
 				.map(profile -> new ProfileRow(profile, runtime.checks()::statusOf, font, actions))
 				.toList();
@@ -72,20 +68,11 @@ public final class ProfileOverviewScreen extends Screen {
 	}
 
 	private void addProfile() {
-		String version = newestVersion();
-		String name = ProfileNames.defaultNameFor(version, runtime.profiles().namesInUse());
-		List<TrackedMod> installed = List.copyOf(runtime.installedMods());
-		VersionProfile profile = VersionProfile.create(name, version, ModSelection.allOf(installed));
-		runtime.profiles().add(profile);
-		showProfiles();
-		runtime.checks().check(profile);
+		minecraft.setScreen(ProfileEditorScreen.forNewProfile(runtime, this));
 	}
 
-	private String newestVersion() {
-		return runtime.versions().get().visible(runtime.settings().includeSnapshots()).stream()
-				.findFirst()
-				.map(GameVersion::id)
-				.orElse(SharedConstants.getCurrentVersion().name());
+	private void openEditor(VersionProfile profile) {
+		minecraft.setScreen(ProfileEditorScreen.forExistingProfile(runtime, this, profile));
 	}
 
 	private void refresh() {

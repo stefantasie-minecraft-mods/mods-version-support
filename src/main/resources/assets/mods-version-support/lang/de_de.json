@@ -8,5 +8,17 @@
 	"mods-version-support.overview.empty": "Noch keine Version. Füge eine hinzu, um den Stand deiner Mods zu sehen.",
 	"mods-version-support.overview.move_up": "Nach oben",
 	"mods-version-support.overview.move_down": "Nach unten",
-	"mods-version-support.overview.delete": "Löschen"
+	"mods-version-support.overview.delete": "Löschen",
+	"mods-version-support.overview.edit": "Bearbeiten",
+	"mods-version-support.editor.title_new": "Neuer Versionseintrag",
+	"mods-version-support.editor.title_edit": "Versionseintrag bearbeiten",
+	"mods-version-support.editor.name": "Name",
+	"mods-version-support.editor.version": "Minecraft-Version",
+	"mods-version-support.editor.search": "Mods auf Modrinth suchen",
+	"mods-version-support.editor.mod_count": "%s von %s Mods ausgewählt",
+	"mods-version-support.editor.select_all": "Alle auswählen",
+	"mods-version-support.editor.select_none": "Auswahl aufheben",
+	"mods-version-support.editor.remove_selected": "Ausgewählte entfernen",
+	"mods-version-support.editor.remove_all": "Alle entfernen",
+	"mods-version-support.editor.save": "Speichern"
 }

@@ -37,6 +37,7 @@ public final class ProfileRow extends ContainerObjectSelectionList.Entry<Profile
 		this.buttons = List.of(
 				iconButton("▲", "overview.move_up", () -> actions.moveUp().accept(profile)),
 				iconButton("▼", "overview.move_down", () -> actions.moveDown().accept(profile)),
+				iconButton("✎", "overview.edit", () -> actions.edit().accept(profile)),
 				iconButton("✕", "overview.delete", () -> actions.delete().accept(profile)));
 	}
 
