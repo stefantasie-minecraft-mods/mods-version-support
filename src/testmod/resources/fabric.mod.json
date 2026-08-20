@@ -1,0 +1,15 @@
+{
+	"schemaVersion": 1,
+	"id": "mods-version-support-testmod",
+	"version": "1.0.0",
+	"name": "Mods Version Support Test Harness",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"de.stefantasie.modsversionsupport.testmod.ScreenshotHarness"
+		]
+	},
+	"depends": {
+		"mods-version-support": "*"
+	}
+}

@@ -1,0 +1,116 @@
+plugins {
+	id 'net.fabricmc.fabric-loom' version "${loom_version}"
+}
+
+repositories {
+	mavenCentral()
+	maven {
+		name = 'Terraformers'
+		url = 'https://maven.terraformersmc.com/releases/'
+	}
+	maven {
+		name = 'Shedaniel'
+		url = 'https://maven.shedaniel.me/'
+	}
+}
+
+loom {
+	splitEnvironmentSourceSets()
+}
+
+sourceSets {
+	testmod {
+		compileClasspath += sourceSets.main.compileClasspath + sourceSets.client.compileClasspath
+		runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.client.runtimeClasspath
+		compileClasspath += sourceSets.main.output + sourceSets.client.output
+		runtimeClasspath += sourceSets.main.output + sourceSets.client.output
+	}
+}
+
+loom {
+	mods {
+		"mods-version-support" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+		"mods-version-support-testmod" {
+			sourceSet sourceSets.testmod
+		}
+	}
+
+	runs {
+		testmodClient {
+			client()
+			name = "Testmod Client"
+			source sourceSets.testmod
+		}
+	}
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+	implementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
+	implementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
+		exclude(group: "net.fabricmc.fabric-api")
+	}
+
+	implementation "com.twelvemonkeys.imageio:imageio-webp:${project.twelvemonkeys_version}"
+	include "com.twelvemonkeys.imageio:imageio-webp:${project.twelvemonkeys_version}"
+	include "com.twelvemonkeys.imageio:imageio-core:${project.twelvemonkeys_version}"
+	include "com.twelvemonkeys.imageio:imageio-metadata:${project.twelvemonkeys_version}"
+	include "com.twelvemonkeys.common:common-lang:${project.twelvemonkeys_version}"
+	include "com.twelvemonkeys.common:common-io:${project.twelvemonkeys_version}"
+	include "com.twelvemonkeys.common:common-image:${project.twelvemonkeys_version}"
+
+	testImplementation platform("org.junit:junit-bom:5.14.0")
+	testImplementation "org.junit.jupiter:junit-jupiter"
+	testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+}
+
+processResources {
+	inputs.property "version", project.version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 25
+	it.options.encoding = "UTF-8"
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
+}
+
+test {
+	useJUnitPlatform()
+}
+
+def prismInstance = providers.gradleProperty("prism_instance_dir")
+		.orElse(providers.provider { defaultPrismInstance() })
+
+tasks.register("installToPrism", Copy) {
+	description = "Copies the built jar into the Prism Launcher instance"
+	group = "fabric"
+
+	from tasks.named("jar")
+	into prismInstance.map { "${it}/minecraft/mods" }
+}
+
+String defaultPrismInstance() {
+	def home = System.getProperty("user.home")
+	def os = System.getProperty("os.name").toLowerCase()
+	if (os.contains("mac")) {
+		return "${home}/Library/Application Support/PrismLauncher/instances/${project.minecraft_version}"
+	}
+	if (os.contains("win")) {
+		return "${System.getenv("APPDATA")}/PrismLauncher/instances/${project.minecraft_version}"
+	}
+	return "${home}/.local/share/PrismLauncher/instances/${project.minecraft_version}"
+}

@@ -1,0 +1,31 @@
+{
+	"schemaVersion": 1,
+	"id": "mods-version-support",
+	"version": "${version}",
+	"name": "Mods Version Support",
+	"description": "Shows which of your installed mods already support a newer Minecraft version, using Modrinth as the source.",
+	"authors": [
+		"Stefantasie"
+	],
+	"contact": {
+		"sources": "https://github.com/stefantasie/mods-version-support"
+	},
+	"license": "MIT",
+	"icon": "assets/mods-version-support/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"de.stefantasie.modsversionsupport.entrypoint.ModsVersionSupportClient"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~26.1",
+		"java": ">=25",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"modmenu": "*",
+		"cloth-config": "*"
+	}
+}
