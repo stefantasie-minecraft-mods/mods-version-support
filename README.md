@@ -35,6 +35,11 @@ Pushing a tag that starts with `v` builds the jar and publishes it to Modrinth a
 release. It needs `MODRINTH_TOKEN` as a repository secret and `MODRINTH_PROJECT_ID` as a
 repository variable.
 
+The **Sync Modrinth page** workflow, started by hand, pushes everything the publishing checklist
+asks for to the project page: license, source and issue links, tags, icon, gallery and
+description. Its token needs `PROJECT_WRITE` on top of `VERSION_CREATE`. Content disclosures are
+not part of the v2 API and remain a manual step.
+
 ## Building
 
 ```

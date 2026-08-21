@@ -1,6 +1,8 @@
-"""Brings the Modrinth project page in line with this repository: icon, gallery and description.
+"""Brings the Modrinth project page in line with this repository.
 
-mc-publish only uploads versions, so the page itself is kept in sync here.
+mc-publish only uploads versions, so everything the publishing checklist asks for lives here:
+license, links, tags, icon, gallery and description. Content disclosures are not part of the
+v2 API and stay a manual step on the project page.
 """
 import json
 import mimetypes
@@ -13,7 +15,18 @@ from pathlib import Path
 
 API = "https://api.modrinth.com/v2"
 USER_AGENT = "stefantasie/mods-version-support (github actions)"
+REPOSITORY = "https://github.com/stefantasie-minecraft-mods/mods-version-support"
 
+PROJECT_FIELDS = {
+    "license_id": "MIT",
+    "license_url": f"{REPOSITORY}/blob/main/LICENSE",
+    "categories": ["utility", "management"],
+    "source_url": REPOSITORY,
+    "issues_url": f"{REPOSITORY}/issues",
+    "wiki_url": f"{REPOSITORY}#readme",
+    "client_side": "required",
+    "server_side": "unsupported",
+}
 GALLERY = [
     ("docs/overview.png", "Version entries with their result", True),
     ("docs/detail.png", "Which mods are ready for the target version", False),
@@ -36,6 +49,17 @@ def request(method, path, *, query=None, body=None, content_type=None):
             return json.loads(payload) if payload else None
     except urllib.error.HTTPError as failure:
         sys.exit(f"{method} {path} failed with {failure.code}: {failure.read().decode()}")
+
+
+def update_details(project_id):
+    fields = dict(PROJECT_FIELDS)
+    if BODY.exists():
+        fields["body"] = BODY.read_text()
+    else:
+        print(f"skipped missing {BODY}")
+    request("PATCH", f"/project/{project_id}", body=json.dumps(fields).encode(),
+            content_type="application/json")
+    print("license, links, tags and description set")
 
 
 def upload_icon(project_id):
@@ -62,16 +86,6 @@ def rebuild_gallery(project_id, existing):
         print(f"gallery image added: {path}")
 
 
-def update_body(project_id):
-    if not BODY.exists():
-        print(f"skipped missing {BODY}")
-        return
-    request("PATCH", f"/project/{project_id}",
-            body=json.dumps({"body": BODY.read_text()}).encode(),
-            content_type="application/json")
-    print(f"description set from {BODY}")
-
-
 TOKEN = os.environ.get("MODRINTH_TOKEN", "")
 PROJECT = os.environ.get("MODRINTH_PROJECT_ID", "")
 if not TOKEN or not PROJECT:
@@ -79,6 +93,7 @@ if not TOKEN or not PROJECT:
 
 project = request("GET", f"/project/{PROJECT}")
 print(f"syncing {project['title']} ({project['slug']})")
+update_details(PROJECT)
 upload_icon(PROJECT)
 rebuild_gallery(PROJECT, project.get("gallery", []))
-update_body(PROJECT)
+print("left for the project page: content disclosures, the v2 API cannot set them")
