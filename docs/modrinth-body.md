@@ -1,5 +1,7 @@
 # Mods Version Support
 
+[Support me on Ko-fi](https://ko-fi.com/stefantasie)
+
 Before you move an instance to a newer Minecraft version, this mod tells you which of your mods
 would come along.
 

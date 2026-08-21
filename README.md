@@ -1,5 +1,7 @@
 # Mods Version Support
 
+[![Support me on Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/stefantasie)
+
 A client-side Fabric mod for Minecraft 26.1 through 26.2. It answers one question: if this instance moved
 to a newer Minecraft version, which of the installed mods would come along?
 
