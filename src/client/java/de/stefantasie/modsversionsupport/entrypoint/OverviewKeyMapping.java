@@ -23,7 +23,7 @@ public final class OverviewKeyMapping {
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			while (mapping.consumeClick()) {
-				client.setScreen(new ProfileOverviewScreen(runtime.get(), client.screen));
+				client.setScreenAndShow(new ProfileOverviewScreen(runtime.get(), null));
 			}
 		});
 	}

@@ -84,7 +84,7 @@ public final class ProfileOverviewScreen extends Screen {
 
 	@Override
 	public void onClose() {
-		minecraft.setScreen(parent);
+		minecraft.setScreenAndShow(parent);
 	}
 
 	private void showProfiles() {
@@ -96,19 +96,19 @@ public final class ProfileOverviewScreen extends Screen {
 	}
 
 	private void addProfile() {
-		minecraft.setScreen(ProfileEditorScreen.forNewProfile(runtime, this));
+		minecraft.setScreenAndShow(ProfileEditorScreen.forNewProfile(runtime, this));
 	}
 
 	private void openSettings() {
-		minecraft.setScreen(SettingsScreens.create(runtime, this));
+		minecraft.setScreenAndShow(SettingsScreens.create(runtime, this));
 	}
 
 	private void openDetail(VersionProfile profile) {
-		minecraft.setScreen(new ProfileDetailScreen(runtime, this, profile));
+		minecraft.setScreenAndShow(new ProfileDetailScreen(runtime, this, profile));
 	}
 
 	private void openEditor(VersionProfile profile) {
-		minecraft.setScreen(ProfileEditorScreen.forExistingProfile(runtime, this, profile));
+		minecraft.setScreenAndShow(ProfileEditorScreen.forExistingProfile(runtime, this, profile));
 	}
 
 	private void refresh() {

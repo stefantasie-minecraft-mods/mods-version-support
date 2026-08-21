@@ -18,7 +18,7 @@ public final class OverviewCommand {
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, context) ->
 				dispatcher.register(ClientCommands.literal(NAME).executes(command -> {
 					Minecraft client = Minecraft.getInstance();
-					client.execute(() -> client.setScreen(new ProfileOverviewScreen(runtime.get(), client.screen)));
+					client.execute(() -> client.setScreenAndShow(new ProfileOverviewScreen(runtime.get(), null)));
 					return 1;
 				})));
 	}
