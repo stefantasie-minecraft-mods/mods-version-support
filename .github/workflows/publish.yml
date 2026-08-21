@@ -27,6 +27,7 @@ jobs:
         with:
           modrinth-id: ${{ vars.MODRINTH_PROJECT_ID }}
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          # Issued by Actions for this run only; it exists so the tag also becomes a GitHub release.
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
           files: build/libs/!(*-sources).jar

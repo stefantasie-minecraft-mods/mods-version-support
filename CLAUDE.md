@@ -1,6 +1,6 @@
 # Mods Version Support
 
-Client-side Fabric mod for Minecraft 26.1.2 that reports which installed mods already support
+Client-side Fabric mod for Minecraft 26.1 through 26.2 that reports which installed mods already support
 a newer Minecraft version, using Modrinth as the source.
 
 ## Rules that override defaults
@@ -22,5 +22,6 @@ One commit per plan step.
 ## Environment
 
 - Build: `net.fabricmc.fabric-loom`, Gradle 9.4+, Java 25+, Mojang names, no remapping.
-- Test instance: `~/Library/Application Support/PrismLauncher/instances/26.1.2`.
+- Test instance: `~/Library/Application Support/PrismLauncher/instances/26.1.2`; the build targets
+  whatever `minecraft_version` in `gradle.properties` says.
 - Modrinth needs a unique User-Agent and stays under 300 requests per minute.

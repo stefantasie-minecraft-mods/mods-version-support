@@ -1,6 +1,6 @@
 # Mods Version Support — Implementation Plan
 
-A client-side Fabric mod for Minecraft 26.1.2. It answers one question: if I move my instance
+A client-side Fabric mod for Minecraft 26.1 through 26.2. It answers one question: if I move my instance
 to a newer Minecraft version, which of my installed mods come along?
 
 Mod id `mods-version-support`, package `de.stefantasie.modsversionsupport`, display name
@@ -12,7 +12,7 @@ These were checked against the live APIs and the local instance on 2026-08-20, n
 
 | Fact | Value |
 | --- | --- |
-| Minecraft | 26.1.2, first unobfuscated release line, Mojang names only |
+| Minecraft | built against 26.1.2, runs on 26.1 to 26.2; first unobfuscated release line, Mojang names only |
 | Yarn mappings | stop at 1.21.11, unusable here |
 | Build | `net.fabricmc.fabric-loom` (the non-remapping plugin), Gradle 9.4+, Java 25+ |
 | Loader in test instance | Fabric Loader 0.19.3 |
@@ -212,3 +212,11 @@ autocomplete fields and record screenshots. The built jar was loaded into a copy
 instance and the game reached its title screen with 59 mods, this one among them.
 
 ![Overview](../../docs/overview.png)
+
+## Reach across Minecraft versions
+
+Checked on 2026-08-21: the same source builds against 26.2 after one change, `Minecraft.setScreen`
+gave way to `setScreenAndShow`, which 26.1.2 already had. The client game tests pass under 26.2,
+and all 65 Minecraft calls in the compiled mod exist unchanged in the 26.2 jar. `fabric.mod.json`
+therefore declares `>=26.1 <26.3` and one jar serves both lines. A separate branch per Minecraft
+version only pays off once an API break forces it, and even then Stonecutter beats branching.

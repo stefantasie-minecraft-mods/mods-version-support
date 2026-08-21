@@ -1,6 +1,6 @@
 # Mods Version Support
 
-A client-side Fabric mod for Minecraft 26.1.2. It answers one question: if this instance moved
+A client-side Fabric mod for Minecraft 26.1 through 26.2. It answers one question: if this instance moved
 to a newer Minecraft version, which of the installed mods would come along?
 
 ![Overview](docs/overview.png)
