@@ -29,6 +29,12 @@ dropdown or by typing, and choose which mods take part.
 Minecraft versions come from Mojang's `version_manifest_v2.json`, the same list a launcher shows.
 Snapshots appear once they are enabled in the settings.
 
+## Releases
+
+Pushing a tag that starts with `v` builds the jar and publishes it to Modrinth and as a GitHub
+release. It needs `MODRINTH_TOKEN` as a repository secret and `MODRINTH_PROJECT_ID` as a
+repository variable.
+
 ## Building
 
 ```
@@ -40,6 +46,10 @@ instance for this Minecraft version; pass `-Pprism_instance_dir=…` for a diffe
 
 Requirements: JDK 25 or newer, Gradle wrapper included. The build uses the non-remapping
 `net.fabricmc.fabric-loom` plugin, since 26.1 ships unobfuscated.
+
+One jar covers Minecraft 26.1 up to 26.2: every Minecraft call this mod makes exists unchanged
+in both, and the client game tests pass against either. Building against another Minecraft
+version is a matter of `minecraft_version` and the dependency versions in `gradle.properties`.
 
 ## Tests
 
