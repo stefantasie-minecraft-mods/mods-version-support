@@ -220,3 +220,25 @@ gave way to `setScreenAndShow`, which 26.1.2 already had. The client game tests 
 and all 65 Minecraft calls in the compiled mod exist unchanged in the 26.2 jar. `fabric.mod.json`
 therefore declares `>=26.1 <26.3` and one jar serves both lines. A separate branch per Minecraft
 version only pays off once an API break forces it, and even then Stonecutter beats branching.
+
+## Older Minecraft lines, and why they stay out for now
+
+Measured on 2026-08-21 against Mojang's official mappings, not guessed:
+
+| API the screens rest on | 26.1 / 26.2 | 1.21.11 | 1.21.1 |
+| --- | --- | --- | --- |
+| `GuiGraphicsExtractor` | yes | no, `GuiGraphics` | no |
+| `Screen.extractRenderState` | yes | no, `render(GuiGraphics, …)` | no |
+| `Identifier` | yes | yes | no, `ResourceLocation` |
+| `MouseButtonEvent` / `KeyEvent` | yes | yes | no, the old numeric signatures |
+| `RenderPipelines` | yes | yes | no |
+| `KeyMapping.Category` | yes | no, a plain string | no |
+
+The split inside this mod decides the cost: `main` is 64 classes with zero Minecraft references,
+so domain, storage, Modrinth access and the check engine run anywhere. `client` is 41 classes
+touching 23 Minecraft types, 13 of them drawing through the extractor across 37 call sites. A
+1.21 build therefore means porting the whole drawing and input layer, twice over, because 1.21.1
+and 1.21.11 differ from each other as well.
+
+Decision: stay on 26.1 to 26.2. If 1.21 ever becomes worth it, 1.21.11 is the cheaper entry point
+and Stonecutter keeps it in one source tree.
